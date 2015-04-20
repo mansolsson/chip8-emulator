@@ -78,7 +78,7 @@ public final class OpCodeRunner {
                         break;
                     case 0x0006:
                         chip8.setRegistersAt(0xF, (byte) (chip8.getRegisterAt((opcode & 0x0F00) >> 8) & 0x1));
-                        chip8.setRegistersAt((opcode & 0x0F00) >> 8, (byte) (chip8.getRegisterAt((opcode & 0x0F00) >> 8) << 1));
+                        chip8.setRegistersAt((opcode & 0x0F00) >> 8, (byte) ((chip8.getRegisterAt((opcode & 0x0F00) >> 8) >> 1) & 0b01111111));
                         break;
                     case 0x0007:
                         byte temp = chip8.getRegisterAt((opcode & 0x00F0) >> 4);
@@ -91,9 +91,8 @@ public final class OpCodeRunner {
                         chip8.setRegistersAt((opcode & 0x00F0) >> 4, temp);
                         break;
                     case 0x000E:
-                        // TODO: Fix opcode
-                        /*chip8.setRegistersAt(0xF, (byte) (chip8.getRegisterAt((opcode & 0x0F00) >> 8) & 0x10000000));
-                        chip8.setRegistersAt((opcode & 0x0F00) >> 8, (byte) (chip8.getRegisterAt((opcode & 0x0F00) >> 8) >>> 1));*/
+                        chip8.setRegistersAt(0xF, (byte) ((chip8.getRegisterAt((opcode & 0x0F00) >> 8) >> 7) & 0b00000001));
+                        chip8.setRegistersAt((opcode & 0x0F00) >> 8, (byte) (chip8.getRegisterAt((opcode & 0x0F00) >> 8) << 1));
                         break;
                 }
                 break;

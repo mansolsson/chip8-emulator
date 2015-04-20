@@ -191,12 +191,19 @@ public class TestOpCodeRunner {
 
     @Test
     public void testOpcode8XY6() {
-        chip8.setRegistersAt(0xA, (byte) 0b00000001);
+        chip8.setRegistersAt(0xA, (byte) 0b10000001);
 
         OpCodeRunner.executeOpcode(0x8A06, chip8);
 
-        assertEquals(0b00000010, chip8.getRegisterAt(0xA));
+        assertEquals(0b01000000, chip8.getRegisterAt(0xA));
         assertEquals(1, chip8.getRegisterAt(0xF));
+
+        chip8.setRegistersAt(0xA, (byte) 0b10000000);
+
+        OpCodeRunner.executeOpcode(0x8A06, chip8);
+
+        assertEquals(0b01000000, chip8.getRegisterAt(0xA));
+        assertEquals(0, chip8.getRegisterAt(0xF));
     }
 
     @Test
@@ -221,14 +228,20 @@ public class TestOpCodeRunner {
     }
 
     @Test
-    @Ignore
     public void testOpcode8XYE() {
-        chip8.setRegistersAt(0xA, (byte) 0b10000000);
+        chip8.setRegistersAt(0xA, (byte) 0b10000001);
 
         OpCodeRunner.executeOpcode(0x8A0E, chip8);
 
-        assertEquals((byte)0b01000000, chip8.getRegisterAt(0xA));
+        assertEquals((byte)0b00000010, chip8.getRegisterAt(0xA));
         assertEquals(1, chip8.getRegisterAt(0xF));
+
+        chip8.setRegistersAt(0xA, (byte) 0b00000001);
+
+        OpCodeRunner.executeOpcode(0x8A0E, chip8);
+
+        assertEquals((byte)0b00000010, chip8.getRegisterAt(0xA));
+        assertEquals(0, chip8.getRegisterAt(0xF));
     }
 
     @Test
