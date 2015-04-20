@@ -121,4 +121,12 @@ public class Chip8 {
     public int getI() {
         return i;
     }
+
+    public byte getDelayTimer() {
+        return delayTimer;
+    }
+
+    public void setDelayTimer(byte delayTimer) {
+        this.delayTimer = delayTimer;
+    }
 }

@@ -233,7 +233,7 @@ public class TestOpCodeRunner {
 
         OpCodeRunner.executeOpcode(0x8A0E, chip8);
 
-        assertEquals((byte)0b00000010, chip8.getRegisterAt(0xA));
+        assertEquals((byte) 0b00000010, chip8.getRegisterAt(0xA));
         assertEquals(1, chip8.getRegisterAt(0xF));
 
         chip8.setRegistersAt(0xA, (byte) 0b00000001);
@@ -277,6 +277,24 @@ public class TestOpCodeRunner {
         OpCodeRunner.executeOpcode(0xB123, chip8);
 
         assertEquals(0x124, chip8.getPc());
+    }
+
+    @Test
+    public void testOpcodeFX07() {
+        chip8.setDelayTimer((byte)0x12);
+
+        OpCodeRunner.executeOpcode(0xFA07, chip8);
+
+        assertEquals(0x12, chip8.getRegisterAt(0xA));
+    }
+
+    @Test
+    public void testOpcodeFX15() {
+        chip8.setRegistersAt(0xA, (byte)0x12);
+
+        OpCodeRunner.executeOpcode(0xFA15, chip8);
+
+        assertEquals(0x12, chip8.getDelayTimer());
     }
 }
 

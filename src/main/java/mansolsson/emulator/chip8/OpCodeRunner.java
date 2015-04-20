@@ -123,10 +123,12 @@ public final class OpCodeRunner {
             case 0xF000:
                 switch (opcode & 0x00FF) {
                     case 0x0007:
+                        chip8.setRegistersAt((opcode & 0x0F00) >> 8, chip8.getDelayTimer());
                         break;
                     case 0x000A:
                         break;
                     case 0x0015:
+                        chip8.setDelayTimer(chip8.getRegisterAt((opcode & 0x0F00) >> 8));
                         break;
                     case 0x0018:
                         break;
