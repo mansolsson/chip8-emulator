@@ -1,6 +1,5 @@
 package mansolsson.emulator.chip8;
 
-import org.junit.Ignore;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -267,7 +266,7 @@ public class TestOpCodeRunner {
     public void testOpcodeANNN() {
         OpCodeRunner.executeOpcode(0xA123, chip8);
 
-        assertEquals(0x0123, chip8.getI());
+        assertEquals(0x0123, chip8.getAddressRegister());
     }
 
     @Test

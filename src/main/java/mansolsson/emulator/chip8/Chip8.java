@@ -10,7 +10,7 @@ public class Chip8 {
     private byte[] registers;
     private byte[] memory;
 
-    private int i;
+    private int addressRegister;
     private int pc;
 
     private byte[] graphics;
@@ -37,8 +37,8 @@ public class Chip8 {
         for(int i = 0; i < MEMORY_SIZE; i++) {
             memory[i] = 0;
         }
-        i = 0;
-        pc = 0;
+        addressRegister = 0;
+        pc = 0x200;
         graphics = new byte[GRAPHICS_SIZE];
         for(int i = 0; i < GRAPHICS_SIZE; i++) {
             graphics[i] = 0;
@@ -114,12 +114,12 @@ public class Chip8 {
         return graphics;
     }
 
-    public void setI(int i) {
-        this.i = i;
+    public void setAddressRegister(int addressRegister) {
+        this.addressRegister = addressRegister;
     }
 
-    public int getI() {
-        return i;
+    public int getAddressRegister() {
+        return addressRegister;
     }
 
     public byte getDelayTimer() {
@@ -128,5 +128,21 @@ public class Chip8 {
 
     public void setDelayTimer(byte delayTimer) {
         this.delayTimer = delayTimer;
+    }
+
+    public byte[] getMemory() {
+        return memory;
+    }
+
+    public byte getSoundTimer() {
+        return soundTimer;
+    }
+
+    public void setSoundTimer(byte soundTimer) {
+        this.soundTimer = soundTimer;
+    }
+
+    public int[] getKeys() {
+        return keys;
     }
 }
