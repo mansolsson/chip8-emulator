@@ -23,6 +23,8 @@ public class Chip8 {
 
     private int[] keys;
 
+    private boolean redrawScreen;
+
     public void init() {
         initVariables();
         loadGame();
@@ -54,6 +56,7 @@ public class Chip8 {
         for(int i = 0; i < NR_OF_KEYS; i++) {
             keys[i] = 0;
         }
+        redrawScreen = true;
     }
 
     private void loadGame() {
@@ -144,5 +147,13 @@ public class Chip8 {
 
     public int[] getKeys() {
         return keys;
+    }
+
+    public boolean isRedrawScreen() {
+        return redrawScreen;
+    }
+
+    public void setRedrawScreen(boolean redrawScreen) {
+        this.redrawScreen = redrawScreen;
     }
 }

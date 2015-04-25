@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestOpCodeRunner {
     private Chip8 chip8;
@@ -16,6 +17,7 @@ public class TestOpCodeRunner {
 
     @Test
     public void testOpcode00E0() {
+        chip8.setRedrawScreen(false);
         byte[] graphics = chip8.getGraphics();
         for (int i = 0; i < graphics.length; i++) {
             graphics[i] = 1;
@@ -23,9 +25,10 @@ public class TestOpCodeRunner {
 
         OpCodeRunner.executeOpcode(0x00E0, chip8);
 
-        for (int i = 0; i < graphics.length; i++) {
-            assertEquals(0, graphics[i]);
+        for (byte graphic : graphics) {
+            assertEquals(0, graphic);
         }
+        assertTrue(chip8.isRedrawScreen());
     }
 
     @Test
@@ -34,7 +37,7 @@ public class TestOpCodeRunner {
 
         OpCodeRunner.executeOpcode(0x00EE, chip8);
 
-        assertEquals(100, chip8.getPc());
+        assertEquals(102, chip8.getPc());
     }
 
     @Test
@@ -279,12 +282,78 @@ public class TestOpCodeRunner {
     }
 
     @Test
+    public void testOpcodeCXNN() {
+        chip8.setPc(0x200);
+        chip8.setRegistersAt(1, (byte)0xAB);
+
+        OpCodeRunner.executeOpcode(0xC100, chip8);
+
+        assertEquals(0, chip8.getRegisterAt(1));
+        assertEquals(0x202, chip8.getPc());
+    }
+
+    // TODO: DXYN
+
+    @Test
+    public void testOpcodeEX9E() {
+        chip8.setPc(0x200);
+        chip8.setRegistersAt(1, (byte) 2);
+        chip8.getKeys()[2] = 1;
+
+        OpCodeRunner.executeOpcode(0xE19E, chip8);
+
+        assertEquals(0x204, chip8.getPc());
+
+        chip8.setPc(0x200);
+        chip8.setRegistersAt(1, (byte) 2);
+        chip8.getKeys()[2] = 0;
+
+        OpCodeRunner.executeOpcode(0xE19E, chip8);
+
+        assertEquals(0x202, chip8.getPc());
+    }
+
+    @Test
+    public void testOpcodeEXA1() {
+        chip8.setPc(0x200);
+        chip8.setRegistersAt(1, (byte) 2);
+        chip8.getKeys()[2] = 0;
+
+        OpCodeRunner.executeOpcode(0xE1A1, chip8);
+
+        assertEquals(0x204, chip8.getPc());
+
+        chip8.setPc(0x200);
+        chip8.setRegistersAt(1, (byte) 2);
+        chip8.getKeys()[2] = 1;
+
+        OpCodeRunner.executeOpcode(0xE1A1, chip8);
+
+        assertEquals(0x202, chip8.getPc());
+    }
+
+    @Test
     public void testOpcodeFX07() {
-        chip8.setDelayTimer((byte)0x12);
+        chip8.setDelayTimer((byte) 0x12);
 
         OpCodeRunner.executeOpcode(0xFA07, chip8);
 
         assertEquals(0x12, chip8.getRegisterAt(0xA));
+    }
+
+    @Test
+    public void testFX0A() {
+        chip8.setPc(0x200);
+
+        OpCodeRunner.executeOpcode(0xFB0A, chip8);
+
+        assertEquals(0x200, chip8.getPc());
+
+        chip8.getKeys()[0] = 1;
+
+        OpCodeRunner.executeOpcode(0xFB0A, chip8);
+
+        assertEquals(0x202, chip8.getPc());
     }
 
     @Test
@@ -295,5 +364,37 @@ public class TestOpCodeRunner {
 
         assertEquals(0x12, chip8.getDelayTimer());
     }
+
+    @Test
+    public void testOpcodeFX18() {
+        chip8.setPc(0x200);
+        chip8.setSoundTimer((byte) 0);
+        chip8.setRegistersAt(0xA, (byte) 0x12);
+
+        OpCodeRunner.executeOpcode(0xFA18, chip8);
+
+        assertEquals(0x202, chip8.getPc());
+        assertEquals(0x12, chip8.getSoundTimer());
+    }
+
+    @Test
+    public void testOpcodeFX1E() {
+        chip8.setPc(0x200);
+        chip8.setAddressRegister(0x100);
+        chip8.setRegistersAt(0xB, (byte) 0x10);
+
+        OpCodeRunner.executeOpcode(0xFB1E, chip8);
+
+        assertEquals(0x110, chip8.getAddressRegister());
+        assertEquals(0x202, chip8.getPc());
+    }
+
+    // TODO: FX29
+
+    // TODO: FX33
+
+    // TODO: FX55
+
+    // TODO: FX65
 }
 

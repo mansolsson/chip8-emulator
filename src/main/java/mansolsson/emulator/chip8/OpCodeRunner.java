@@ -14,10 +14,12 @@ public final class OpCodeRunner {
                 switch (opcode) {
                     case 0x00E0:
                         chip8.clearGraphics();
+                        chip8.setRedrawScreen(true);
                         chip8.movePcToNextInstruction();
                         break;
                     case 0x00EE:
                         chip8.setPc(chip8.popStack());
+                        chip8.movePcToNextInstruction();
                         break;
                 }
                 break;
@@ -189,6 +191,7 @@ public final class OpCodeRunner {
                         break;
                     case 0x0018:
                         chip8.setSoundTimer(chip8.getRegisterAt((opcode & 0x0F00) >> 8));
+                        chip8.movePcToNextInstruction();
                         break;
                     case 0x001E:
                         chip8.setAddressRegister(chip8.getAddressRegister() + chip8.getRegisterAt((opcode & 0x0F00) >> 8));
