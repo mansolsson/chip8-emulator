@@ -66,12 +66,11 @@ public class Chip8Service {
 
     public void executeProgramInstruction() {
         int opcode = getCurrentOpcode();
-        System.out.println(Integer.toHexString(opcode));
+        //System.out.println(Integer.toHexString(opcode));
         opcodeHandler.executeOpcode(opcode);
     }
 
     private int getCurrentOpcode() {
-        System.out.println(Integer.toHexString(chip8.getMemory()[chip8.getPc()] & 0xFF) + " | " + Integer.toHexString(chip8.getMemory()[chip8.getPc() + 1] & 0xFF));
         return ((chip8.getMemory()[chip8.getPc()] << 8) & 0xFFFF) | (chip8.getMemory()[chip8.getPc() + 1] & 0xFF);
     }
 
@@ -96,6 +95,10 @@ public class Chip8Service {
 
     public void setScreenToBeUpdated() {
         chip8.setRedrawScreen(true);
+    }
+
+    public void setScreenUpdated() {
+        chip8.setRedrawScreen(false);
     }
 
     public void popStackIntoPc() {

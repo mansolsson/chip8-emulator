@@ -43,6 +43,7 @@ public class Chip8Controller {
                         screen.repaint();
                     }
                 });
+                chip8Service.setScreenUpdated();
             }
             if(chip8Service.shouldSoundBePlayed()) {
                 // Play sound

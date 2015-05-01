@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Application {
     public static void main(String[] args) throws IOException, InvocationTargetException, InterruptedException {
-        Chip8Controller chip8Controller = new Chip8Controller("/home/mans/Downloads/pong.ch8");
+        Chip8Controller chip8Controller = new Chip8Controller("/home/mans/Downloads/pong1.ch8");
         chip8Controller.runProgram();
     }
 }

@@ -131,8 +131,8 @@ public class OpcodeHandler {
                 break;
             case 0xD000:
                 // TODO: Move functionality into Chip8Service
-                byte x = chip8Service.getRegistryAt((opcode & 0x0F00) >> 8);
-                byte y = chip8Service.getRegistryAt((opcode & 0x00F0) >> 4);
+                int x = chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) & 0xFF;
+                int y = chip8Service.getRegistryAt((opcode & 0x00F0) >> 4) & 0xFF;
                 int height = opcode & 0x000F;
                 int pixel;
 
@@ -156,6 +156,7 @@ public class OpcodeHandler {
                         }
                     }
                 }
+                chip8Service.setScreenToBeUpdated();
                 chip8Service.movePcToNextInstruction();
                 break;
             case 0xE000:
