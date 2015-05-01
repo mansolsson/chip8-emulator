@@ -66,11 +66,13 @@ public class Chip8Service {
 
     public void executeProgramInstruction() {
         int opcode = getCurrentOpcode();
+        System.out.println(Integer.toHexString(opcode));
         opcodeHandler.executeOpcode(opcode);
     }
 
     private int getCurrentOpcode() {
-        return (chip8.getMemory()[chip8.getPc()] << 8) | chip8.getMemory()[chip8.getPc() + 1];
+        System.out.println(Integer.toHexString(chip8.getMemory()[chip8.getPc()] & 0xFF) + " | " + Integer.toHexString(chip8.getMemory()[chip8.getPc() + 1] & 0xFF));
+        return ((chip8.getMemory()[chip8.getPc()] << 8) & 0xFFFF) | (chip8.getMemory()[chip8.getPc() + 1] & 0xFF);
     }
 
     public boolean shouldScreenBeUpdated() {
@@ -191,5 +193,13 @@ public class Chip8Service {
 
     public int[] getKeys() {
         return chip8.getKeys();
+    }
+
+    public boolean subtractRegistryFromValue(int registryIndex, byte value) {
+        int registerValue = chip8.getRegisters()[registryIndex] & 0xFF;
+        boolean borrow = registerValue > (value & 0xFF);
+        int result = (value | 0x100) - registerValue;
+        chip8.getRegisters()[registryIndex] = (byte)(result & 0xFF);
+        return borrow;
     }
 }
