@@ -202,7 +202,31 @@ public class Chip8Service {
         int registerValue = chip8.getRegisters()[registryIndex] & 0xFF;
         boolean borrow = registerValue > (value & 0xFF);
         int result = (value | 0x100) - registerValue;
-        chip8.getRegisters()[registryIndex] = (byte)(result & 0xFF);
+        chip8.getRegisters()[registryIndex] = (byte) (result & 0xFF);
         return borrow;
+    }
+
+    public void updateGraphics(int x, int y, int height) {
+        int pixel;
+        setRegistryAt(0xF, (byte) 0);
+        for (int yline = 0; yline < height; yline++) {
+            pixel = getMemory()[getAddressRegister() + yline] & 0xFF;
+            for (int xline = 0; xline < 8; xline++) {
+                if ((pixel & (0x80 >> xline)) != 0) {
+                    int index = x + xline + ((y + yline) * 64);
+                    if (index > 2047) {
+                        index = 2047;
+                    }
+                    if (getGraphics()[index] == 1) {
+                        setRegistryAt(0xF, (byte) 1);
+                    }
+                    index = x + xline + ((y + yline) * 64);
+                    if (index > 2047) {
+                        index = 2047;
+                    }
+                    getGraphics()[index] ^= 1;
+                }
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -241,20 +242,20 @@ public class TestOpcodeHandler {
 
     @Test
     public void testExecuteOpcode8XX6LeastSignificantBitSet() {
-        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte)0x1);
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
 
         opcodeHandler.executeOpcode(0x8A06);
 
         verify(chip8Service).setRegistryAt(0xF, (byte) 0x1);
         verify(chip8Service, times(2)).getRegistryAt(0xA);
-        verify(chip8Service).setRegistryAt(0xA, (byte)0x0);
+        verify(chip8Service).setRegistryAt(0xA, (byte) 0x0);
         verify(chip8Service).movePcToNextInstruction();
         verifyNoMoreInteractions(chip8Service);
     }
 
     @Test
     public void testExecuteOpcode8XX6LeastSignificantBitNotSet() {
-        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte)0x2);
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x2);
 
         opcodeHandler.executeOpcode(0x8A06);
 
@@ -295,7 +296,7 @@ public class TestOpcodeHandler {
 
     @Test
     public void testExecuteOpcode8XXEWithGreatestBitSet() {
-        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte)0b10000000);
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0b10000000);
 
         opcodeHandler.executeOpcode(0x8A0E);
 
@@ -308,7 +309,7 @@ public class TestOpcodeHandler {
 
     @Test
     public void testExecuteOpcode8XXEWithGreatestBitNotSet() {
-        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte)0b01000000);
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0b01000000);
 
         opcodeHandler.executeOpcode(0x8A0E);
 
@@ -352,7 +353,7 @@ public class TestOpcodeHandler {
 
     @Test
     public void testExecuteOpcode0xBXXX() {
-        when(chip8Service.getRegistryAt(0x0)).thenReturn((byte)0xFF);
+        when(chip8Service.getRegistryAt(0x0)).thenReturn((byte) 0xFF);
 
         opcodeHandler.executeOpcode(0xB123);
 
@@ -365,7 +366,241 @@ public class TestOpcodeHandler {
     public void testExecuteOpcode0xCXXX() {
         opcodeHandler.executeOpcode(0xCA00);
 
-        verify(chip8Service).setRegistryAt(0xA, (byte)0x0);
+        verify(chip8Service).setRegistryAt(0xA, (byte) 0x0);
+        verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
+    }
+
+    @Test
+    public void testExecuteOpcode0xDXXX() {
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
+        when(chip8Service.getRegistryAt(0xB)).thenReturn((byte) 0x2);
+
+        opcodeHandler.executeOpcode(0xDAB4);
+
+        verify(chip8Service).getRegistryAt(0xA);
+        verify(chip8Service).getRegistryAt(0xB);
+        verify(chip8Service).updateGraphics(0x1, 0x2, 0x4);
+        verify(chip8Service).setScreenToBeUpdated();
+        verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
+    }
+
+    @Test
+    public void testExecuteOpcode0xEX9EWhenKeyPressed() {
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
+        when(chip8Service.getKeys()).thenReturn(new int[]{0, 1});
+
+        opcodeHandler.executeOpcode(0xEA9E);
+
+        verify(chip8Service).getRegistryAt(0xA);
+        verify(chip8Service).getKeys();
+        verify(chip8Service, times(2)).movePcToNextInstruction();
+    }
+
+    @Test
+    public void testExecuteOpcode0xEX9EWhenKeyNotPressed() {
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
+        when(chip8Service.getKeys()).thenReturn(new int[]{0, 0});
+
+        opcodeHandler.executeOpcode(0xEA9E);
+
+        verify(chip8Service).getRegistryAt(0xA);
+        verify(chip8Service).getKeys();
+        verify(chip8Service).movePcToNextInstruction();
+    }
+
+    @Test
+    public void testExecuteOpcode0xEXA1WhenKeyPressed() {
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
+        when(chip8Service.getKeys()).thenReturn(new int[]{0, 1});
+
+        opcodeHandler.executeOpcode(0xEAA1);
+
+        verify(chip8Service).getRegistryAt(0xA);
+        verify(chip8Service).getKeys();
+        verify(chip8Service).movePcToNextInstruction();
+    }
+
+    @Test
+    public void testExecuteOpcode0xEXA1WhenKeyNotPressed() {
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
+        when(chip8Service.getKeys()).thenReturn(new int[]{0, 0});
+
+        opcodeHandler.executeOpcode(0xEAA1);
+
+        verify(chip8Service).getRegistryAt(0xA);
+        verify(chip8Service).getKeys();
+        verify(chip8Service, times(2)).movePcToNextInstruction();
+    }
+
+    @Test
+    public void testExecuteOpcode0xFX07() {
+        when(chip8Service.getDelayTimer()).thenReturn((byte) 0x10);
+
+        opcodeHandler.executeOpcode(0xFA07);
+
+        verify(chip8Service).getDelayTimer();
+        verify(chip8Service).setRegistryAt(0xA, (byte) 0x10);
+        verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
+    }
+
+    @Test
+    public void testExecuteOpcode0xFX0AWhenKeyPressed() {
+        when(chip8Service.getKeys()).thenReturn(new int[]{0, 0, 0, 1, 0});
+
+        opcodeHandler.executeOpcode(0xFA0A);
+
+        verify(chip8Service, times(5)).getKeys();
+        verify(chip8Service).setRegistryAt(0xA, (byte) 0x3);
+        verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
+    }
+
+    @Test
+    public void testExecuteOpcode0xFX0AWhenKeyNotPressed() {
+        when(chip8Service.getKeys()).thenReturn(new int[]{0, 0, 0, 0, 0});
+
+        opcodeHandler.executeOpcode(0xFA0A);
+
+        verify(chip8Service, times(6)).getKeys();
+        verifyNoMoreInteractions(chip8Service);
+    }
+
+    @Test
+    public void testExecuteOpcode0xFX15() {
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x10);
+
+        opcodeHandler.executeOpcode(0xFA15);
+
+        verify(chip8Service).getRegistryAt(0xA);
+        verify(chip8Service).setDelayTimer((byte) 0x10);
+        verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
+    }
+
+    @Test
+    public void testExecuteOpcode0xFX18() {
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x10);
+
+        opcodeHandler.executeOpcode(0xFA18);
+
+        verify(chip8Service).getRegistryAt(0xA);
+        verify(chip8Service).setSoundTimer((byte) 0x10);
+        verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
+    }
+
+    @Test
+    public void testExecuteOpcode0xFX1E() {
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0xFE);
+        when(chip8Service.getAddressRegister()).thenReturn(0x10);
+
+        opcodeHandler.executeOpcode(0xFA1E);
+
+        verify(chip8Service).getAddressRegister();
+        verify(chip8Service).getRegistryAt(0xA);
+        verify(chip8Service).setAddressRegister(0x10 + 0xFE);
+        verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
+    }
+
+    @Test
+    public void testExecuteOpcode0xFX29() {
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0xFE);
+
+        opcodeHandler.executeOpcode(0xFA29);
+
+        verify(chip8Service).getRegistryAt(0xA);
+        verify(chip8Service).setAddressRegister(0xFE * 5);
+        verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
+    }
+
+    @Test
+    public void testExecuteOpcode0xFX33() {
+        byte[] memory = new byte[]{0, 0, 0, 0, 0};
+        when(chip8Service.getMemory()).thenReturn(memory);
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 123);
+        when(chip8Service.getAddressRegister()).thenReturn(1);
+
+        opcodeHandler.executeOpcode(0xFA33);
+
+        verify(chip8Service, times(3)).getMemory();
+        verify(chip8Service, times(3)).getRegistryAt(0xA);
+        verify(chip8Service, times(3)).getAddressRegister();
+        verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
+
+        assertEquals(0, memory[0]);
+        assertEquals(1, memory[1]);
+        assertEquals(2, memory[2]);
+        assertEquals(3, memory[3]);
+        assertEquals(0, memory[4]);
+    }
+
+    @Test
+    public void testExecuteOpcode0xFX55() {
+        byte[] memory = new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        when(chip8Service.getMemory()).thenReturn(memory);
+        when(chip8Service.getAddressRegister()).thenReturn(1);
+        for (int i = 0; i < 0xF; i++) {
+            when(chip8Service.getRegistryAt(i)).thenReturn((byte) (i + 1));
+        }
+
+        opcodeHandler.executeOpcode(0xF055);
+
+        verify(chip8Service).getMemory();
+        verify(chip8Service).getAddressRegister();
+        verify(chip8Service, times(0xF)).getRegistryAt(anyInt());
+        verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
+
+        assertEquals(0, memory[0]);
+        assertEquals(1, memory[1]);
+        assertEquals(2, memory[2]);
+        assertEquals(3, memory[3]);
+        assertEquals(4, memory[4]);
+        assertEquals(5, memory[5]);
+        assertEquals(6, memory[6]);
+        assertEquals(7, memory[7]);
+        assertEquals(8, memory[8]);
+        assertEquals(9, memory[9]);
+        assertEquals(10, memory[10]);
+        assertEquals(11, memory[11]);
+        assertEquals(12, memory[12]);
+        assertEquals(13, memory[13]);
+        assertEquals(14, memory[14]);
+        assertEquals(15, memory[15]);
+        assertEquals(0, memory[16]);
+    }
+
+    @Test
+    public void testExecuteOpcode0xFX65() {
+        byte[] memory = new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0};
+        when(chip8Service.getMemory()).thenReturn(memory);
+        when(chip8Service.getAddressRegister()).thenReturn(1);
+
+        opcodeHandler.executeOpcode(0xF065);
+
+        verify(chip8Service).getMemory();
+        verify(chip8Service).getAddressRegister();
+        verify(chip8Service).setRegistryAt(0x0, (byte) 1);
+        verify(chip8Service).setRegistryAt(0x1, (byte) 2);
+        verify(chip8Service).setRegistryAt(0x2, (byte) 3);
+        verify(chip8Service).setRegistryAt(0x3, (byte) 4);
+        verify(chip8Service).setRegistryAt(0x4, (byte) 5);
+        verify(chip8Service).setRegistryAt(0x5, (byte) 6);
+        verify(chip8Service).setRegistryAt(0x6, (byte) 7);
+        verify(chip8Service).setRegistryAt(0x7, (byte) 8);
+        verify(chip8Service).setRegistryAt(0x8, (byte) 9);
+        verify(chip8Service).setRegistryAt(0x9, (byte) 10);
+        verify(chip8Service).setRegistryAt(0xA, (byte) 11);
+        verify(chip8Service).setRegistryAt(0xB, (byte) 12);
+        verify(chip8Service).setRegistryAt(0xC, (byte) 13);
+        verify(chip8Service).setRegistryAt(0xD, (byte) 14);
+        verify(chip8Service).setRegistryAt(0xE, (byte) 15);
         verify(chip8Service).movePcToNextInstruction();
         verifyNoMoreInteractions(chip8Service);
     }

@@ -77,7 +77,7 @@ public class OpcodeHandler {
                         chip8Service.movePcToNextInstruction();
                         break;
                     case 0x0004:
-                        if(chip8Service.addToRegistryAt((opcode & 0x0F00) >> 8, chip8Service.getRegistryAt((opcode & 0x00F0) >> 4))) {
+                        if (chip8Service.addToRegistryAt((opcode & 0x0F00) >> 8, chip8Service.getRegistryAt((opcode & 0x00F0) >> 4))) {
                             chip8Service.setRegistryAt(0xF, (byte) 1);
                         } else {
                             chip8Service.setRegistryAt(0xF, (byte) 0);
@@ -98,7 +98,7 @@ public class OpcodeHandler {
                         chip8Service.movePcToNextInstruction();
                         break;
                     case 0x0007:
-                        if(chip8Service.subtractRegistryFromValue((opcode & 0x0F00) >> 8, chip8Service.getRegistryAt((opcode & 0x00F0) >> 4))) {
+                        if (chip8Service.subtractRegistryFromValue((opcode & 0x0F00) >> 8, chip8Service.getRegistryAt((opcode & 0x00F0) >> 4))) {
                             chip8Service.setRegistryAt(0xF, (byte) 0);
                         } else {
                             chip8Service.setRegistryAt(0xF, (byte) 1);
@@ -130,32 +130,7 @@ public class OpcodeHandler {
                 chip8Service.movePcToNextInstruction();
                 break;
             case 0xD000:
-                // TODO: Move functionality into Chip8Service
-                int x = chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) & 0xFF;
-                int y = chip8Service.getRegistryAt((opcode & 0x00F0) >> 4) & 0xFF;
-                int height = opcode & 0x000F;
-                int pixel;
-
-                chip8Service.setRegistryAt(0xF, (byte) 0);
-                for (int yline = 0; yline < height; yline++) {
-                    pixel = chip8Service.getMemory()[chip8Service.getAddressRegister() + yline];
-                    for (int xline = 0; xline < 8; xline++) {
-                        if ((pixel & (0x80 >> xline)) != 0) {
-                            int index = x + xline + ((y + yline) * 64);
-                            if(index > 2047) {
-                                index = 2047;
-                            }
-                            if (chip8Service.getGraphics()[index] == 1) {
-                                chip8Service.setRegistryAt(0xF, (byte) 1);
-                            }
-                            index = x + xline + ((y + yline) * 64);
-                            if(index > 2047) {
-                                index = 2047;
-                            }
-                            chip8Service.getGraphics()[index] ^= 1;
-                        }
-                    }
-                }
+                chip8Service.updateGraphics(chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) & 0xFF, chip8Service.getRegistryAt((opcode & 0x00F0) >> 4) & 0xFF, opcode & 0x000F);
                 chip8Service.setScreenToBeUpdated();
                 chip8Service.movePcToNextInstruction();
                 break;
@@ -168,7 +143,7 @@ public class OpcodeHandler {
                         chip8Service.movePcToNextInstruction();
                         break;
                     case 0x00A1:
-                        if (chip8Service.getKeys()[chip8Service.getRegistryAt((opcode & 0x0F00) >> 8)] == 0) {
+                        if (chip8Service.getKeys()[chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) & 0xF] == 0) {
                             chip8Service.movePcToNextInstruction();
                         }
                         chip8Service.movePcToNextInstruction();
@@ -182,7 +157,8 @@ public class OpcodeHandler {
                         chip8Service.movePcToNextInstruction();
                         break;
                     case 0x000A:
-                        for (int i = 0; i < chip8Service.getKeys().length; i++) {
+                        int length = chip8Service.getKeys().length;
+                        for (int i = 0; i < length; i++) {
                             if (chip8Service.getKeys()[i] == 1) {
                                 chip8Service.setRegistryAt((opcode & 0x0F00) >> 8, (byte) i);
                                 chip8Service.movePcToNextInstruction();
@@ -199,17 +175,17 @@ public class OpcodeHandler {
                         chip8Service.movePcToNextInstruction();
                         break;
                     case 0x001E:
-                        chip8Service.setAddressRegister(chip8Service.getAddressRegister() + chip8Service.getRegistryAt((opcode & 0x0F00) >> 8));
+                        chip8Service.setAddressRegister(chip8Service.getAddressRegister() + (chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) & 0xFF));
                         chip8Service.movePcToNextInstruction();
                         break;
                     case 0x0029:
-                        chip8Service.setAddressRegister(chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) * 5);
+                        chip8Service.setAddressRegister((chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) & 0xFF) * 5);
                         chip8Service.movePcToNextInstruction();
                         break;
                     case 0x0033:
-                        chip8Service.getMemory()[chip8Service.getAddressRegister()] = (byte) (chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) / 100);
-                        chip8Service.getMemory()[chip8Service.getAddressRegister() + 1] = (byte) ((chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) / 10) % 10);
-                        chip8Service.getMemory()[chip8Service.getAddressRegister() + 2] = (byte) (chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) % 10);
+                        chip8Service.getMemory()[chip8Service.getAddressRegister()] = (byte) ((chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) & 0xFF) / 100);
+                        chip8Service.getMemory()[chip8Service.getAddressRegister() + 1] = (byte) (((chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) & 0xFF) / 10) % 10);
+                        chip8Service.getMemory()[chip8Service.getAddressRegister() + 2] = (byte) ((chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) & 0xFF) % 10);
                         chip8Service.movePcToNextInstruction();
                         break;
                     case 0x0055:
