@@ -1,5 +1,6 @@
 package mansolsson.emulator.chip8.service;
 
+import mansolsson.emulator.chip8.model.Chip8Constants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -389,48 +390,51 @@ public class TestOpcodeHandler {
     @Test
     public void testExecuteOpcode0xEX9EWhenKeyPressed() {
         when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
-        when(chip8Service.getKeys()).thenReturn(new int[]{0, 1});
+        when(chip8Service.getKey(1)).thenReturn(1);
 
         opcodeHandler.executeOpcode(0xEA9E);
 
         verify(chip8Service).getRegistryAt(0xA);
-        verify(chip8Service).getKeys();
+        verify(chip8Service).getKey(1);
         verify(chip8Service, times(2)).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
     }
 
     @Test
     public void testExecuteOpcode0xEX9EWhenKeyNotPressed() {
         when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
-        when(chip8Service.getKeys()).thenReturn(new int[]{0, 0});
+        when(chip8Service.getKey(0xA)).thenReturn(0);
 
         opcodeHandler.executeOpcode(0xEA9E);
 
         verify(chip8Service).getRegistryAt(0xA);
-        verify(chip8Service).getKeys();
+        verify(chip8Service).getKey(0x1);
         verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
     }
 
     @Test
     public void testExecuteOpcode0xEXA1WhenKeyPressed() {
         when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
-        when(chip8Service.getKeys()).thenReturn(new int[]{0, 1});
+        when(chip8Service.getKey(1)).thenReturn(1);
 
         opcodeHandler.executeOpcode(0xEAA1);
 
         verify(chip8Service).getRegistryAt(0xA);
-        verify(chip8Service).getKeys();
+        verify(chip8Service).getKey(0x1);
         verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
     }
 
     @Test
     public void testExecuteOpcode0xEXA1WhenKeyNotPressed() {
         when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
-        when(chip8Service.getKeys()).thenReturn(new int[]{0, 0});
+        when(chip8Service.getKey(anyInt())).thenReturn(0);
 
         opcodeHandler.executeOpcode(0xEAA1);
 
         verify(chip8Service).getRegistryAt(0xA);
-        verify(chip8Service).getKeys();
+        verify(chip8Service).getKey(1);
         verify(chip8Service, times(2)).movePcToNextInstruction();
     }
 
@@ -448,11 +452,14 @@ public class TestOpcodeHandler {
 
     @Test
     public void testExecuteOpcode0xFX0AWhenKeyPressed() {
-        when(chip8Service.getKeys()).thenReturn(new int[]{0, 0, 0, 1, 0});
+        when(chip8Service.getKey(0)).thenReturn(0);
+        when(chip8Service.getKey(1)).thenReturn(0);
+        when(chip8Service.getKey(2)).thenReturn(0);
+        when(chip8Service.getKey(3)).thenReturn(1);
 
         opcodeHandler.executeOpcode(0xFA0A);
 
-        verify(chip8Service, times(5)).getKeys();
+        verify(chip8Service, times(4)).getKey(anyInt());
         verify(chip8Service).setRegistryAt(0xA, (byte) 0x3);
         verify(chip8Service).movePcToNextInstruction();
         verifyNoMoreInteractions(chip8Service);
@@ -460,11 +467,11 @@ public class TestOpcodeHandler {
 
     @Test
     public void testExecuteOpcode0xFX0AWhenKeyNotPressed() {
-        when(chip8Service.getKeys()).thenReturn(new int[]{0, 0, 0, 0, 0});
+        when(chip8Service.getKey(anyInt())).thenReturn(0);
 
         opcodeHandler.executeOpcode(0xFA0A);
 
-        verify(chip8Service, times(6)).getKeys();
+        verify(chip8Service, times(Chip8Constants.NR_OF_KEYS)).getKey(anyInt());
         verifyNoMoreInteractions(chip8Service);
     }
 

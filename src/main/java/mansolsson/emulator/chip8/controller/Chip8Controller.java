@@ -1,24 +1,22 @@
 package mansolsson.emulator.chip8.controller;
 
+import mansolsson.emulator.chip8.gui.EmulatorScreen;
 import mansolsson.emulator.chip8.service.Chip8Service;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
-public class Chip8Controller {
+public class Chip8Controller implements Runnable{
     private String programPath;
-    Chip8Service chip8Service;
+    private Chip8Service chip8Service;
     private EmulatorScreen screen;
 
-    public Chip8Controller(String programPath) {
-        this.programPath = programPath;
+    public Chip8Controller(EmulatorScreen s) {
+        this.screen = s;
         chip8Service = new Chip8Service();
     }
 
@@ -26,18 +24,14 @@ public class Chip8Controller {
         byte[] program = readProgramFromFile();
         chip8Service.loadProgram(program);
 
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                screen = new EmulatorScreen(chip8Service);
-            }
-        });
-
+        long target = 1000 / 500;
         boolean programRunning = true;
         while(programRunning) {
+            Date before = new Date();
+
             chip8Service.executeProgramInstruction();
             if(chip8Service.shouldScreenBeUpdated()) {
-                SwingUtilities.invokeAndWait(new Runnable() {
+                SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         screen.repaint();
@@ -49,10 +43,40 @@ public class Chip8Controller {
                 // Play sound
             }
             chip8Service.setDelayTimer((byte)(chip8Service.getDelayTimer() - 1));
+
+            Date after = new Date();
+
+            long milliseconds = after.getTime() - before.getTime();
+            long timeToWait = target - milliseconds;
+
+            if(timeToWait > 0) {
+                Thread.sleep(timeToWait);
+            }
         }
     }
 
     private byte[] readProgramFromFile() throws IOException {
         return Files.readAllBytes(Paths.get(programPath));
+    }
+
+    public Chip8Service getChip8Service() {
+        return chip8Service;
+    }
+
+    @Override
+    public void run() {
+        try {
+            runProgram();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setProgramPath(String programPath) {
+        this.programPath = programPath;
     }
 }

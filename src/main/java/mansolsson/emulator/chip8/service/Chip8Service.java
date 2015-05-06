@@ -66,7 +66,6 @@ public class Chip8Service {
 
     public void executeProgramInstruction() {
         int opcode = getCurrentOpcode();
-        //System.out.println(Integer.toHexString(opcode));
         opcodeHandler.executeOpcode(opcode);
     }
 
@@ -86,7 +85,7 @@ public class Chip8Service {
         chip8.setPc(chip8.getPc() + Chip8Constants.NR_OF_BYTES_PER_INSTRUCTION);
     }
 
-    public void clearScreen() {
+    public synchronized void clearScreen() {
         byte[] graphics = chip8.getGraphics();
         for (int i = 0; i < graphics.length; i++) {
             graphics[i] = 0;
@@ -178,8 +177,8 @@ public class Chip8Service {
         return chip8.getMemory();
     }
 
-    public byte[] getGraphics() {
-        return chip8.getGraphics();
+    public synchronized byte[] getGraphics() {
+        return chip8.getGraphics() != null ? chip8.getGraphics() : new byte[0];
     }
 
     public byte getDelayTimer() {
@@ -194,8 +193,17 @@ public class Chip8Service {
         chip8.setSoundTimer(value);
     }
 
-    public int[] getKeys() {
-        return chip8.getKeys();
+    public synchronized int getKey(int index) {
+        if(chip8.getKeys() != null) {
+            return chip8.getKeys()[index];
+        }
+        return 0;
+    }
+
+    public synchronized void setKey(int index, int value) {
+        if(chip8.getKeys() != null) {
+            chip8.getKeys()[index] = value;
+        }
     }
 
     public boolean subtractRegistryFromValue(int registryIndex, byte value) {
@@ -206,7 +214,7 @@ public class Chip8Service {
         return borrow;
     }
 
-    public void updateGraphics(int x, int y, int height) {
+    public synchronized void updateGraphics(int x, int y, int height) {
         int pixel;
         setRegistryAt(0xF, (byte) 0);
         for (int yline = 0; yline < height; yline++) {
