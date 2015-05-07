@@ -215,26 +215,24 @@ public class Chip8Service {
     }
 
     public synchronized void updateGraphics(int x, int y, int height) {
-        int pixel;
-        setRegistryAt(0xF, (byte) 0);
-        for (int yline = 0; yline < height; yline++) {
-            pixel = getMemory()[getAddressRegister() + yline] & 0xFF;
-            for (int xline = 0; xline < 8; xline++) {
-                if ((pixel & (0x80 >> xline)) != 0) {
-                    int index = x + xline + ((y + yline) * 64);
-                    if (index > 2047) {
-                        index = 2047;
+        boolean carryFlag = false;
+        byte[] graphics = getGraphics();
+        for(int rowIndex = 0; rowIndex < height; rowIndex++) {
+            int memoryRow = getMemory()[getAddressRegister() + rowIndex] & 0xFF;
+            for(int columnIndex = 0; columnIndex < 8; columnIndex++) {
+                int index = (x + columnIndex) % 64 + (rowIndex + y) * 64;
+                // TODO: Probably a bug making it possible for the index to be out of range
+                if(index > 2047) {
+                    index = 2047;
+                }
+                if((memoryRow & (0b10000000 >> columnIndex)) != 0) {
+                    if(graphics[index] == 1) {
+                        carryFlag = true;
                     }
-                    if (getGraphics()[index] == 1) {
-                        setRegistryAt(0xF, (byte) 1);
-                    }
-                    index = x + xline + ((y + yline) * 64);
-                    if (index > 2047) {
-                        index = 2047;
-                    }
-                    getGraphics()[index] ^= 1;
+                    graphics[index] ^= 1;
                 }
             }
         }
+        setRegistryAt(0xF, carryFlag ? (byte) 1 : (byte) 0);
     }
 }
