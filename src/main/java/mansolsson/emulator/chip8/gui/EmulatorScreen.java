@@ -21,7 +21,7 @@ public class EmulatorScreen extends JFrame {
     public void init() {
         setTitle("Chip-8 Emulator");
         setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setJMenuBar(menuBar);
         add(chip8Screen);
         pack();

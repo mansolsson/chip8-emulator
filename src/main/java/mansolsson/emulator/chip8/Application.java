@@ -8,12 +8,9 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Application {
     public static void main(String[] args) throws IOException, InvocationTargetException, InterruptedException {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                EmulatorScreen emulatorScreen = new EmulatorScreen();
-                emulatorScreen.init();
-            }
+        SwingUtilities.invokeLater(() -> {
+            EmulatorScreen emulatorScreen = new EmulatorScreen();
+            emulatorScreen.init();
         });
     }
 }
