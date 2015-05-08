@@ -31,12 +31,7 @@ public class Chip8Controller implements Runnable{
 
             chip8Service.executeProgramInstruction();
             if(chip8Service.shouldScreenBeUpdated()) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        screen.repaint();
-                    }
-                });
+                SwingUtilities.invokeLater(() -> screen.repaint());
                 chip8Service.setScreenUpdated();
             }
             if(chip8Service.shouldSoundBePlayed()) {
@@ -67,11 +62,7 @@ public class Chip8Controller implements Runnable{
     public void run() {
         try {
             runProgram();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InvocationTargetException | InterruptedException e) {
             e.printStackTrace();
         }
     }

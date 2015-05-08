@@ -14,11 +14,7 @@ public class Chip8Service {
 
     public void loadProgram(byte[] program) {
         initializeChip8();
-        int memoryLocation = Chip8Constants.START_OF_PROGRAM_IN_MEMORY;
-        byte[] memory = chip8.getMemory();
-        for (int i = 0; i < program.length; i++) {
-            memory[memoryLocation + i] = program[i];
-        }
+        System.arraycopy(program, 0, chip8.getMemory(), Chip8Constants.START_OF_PROGRAM_IN_MEMORY, program.length);
     }
 
     private void initializeChip8() {

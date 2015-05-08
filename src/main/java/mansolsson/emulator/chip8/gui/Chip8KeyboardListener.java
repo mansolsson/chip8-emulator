@@ -16,9 +16,9 @@ public class Chip8KeyboardListener implements KeyListener {
 
     private static Map<Integer, Integer> KEY_MAP = new HashMap<>();
     static {
-        KEY_MAP.put(Integer.valueOf(KeyEvent.VK_1), Integer.valueOf(0));
-        KEY_MAP.put(Integer.valueOf(KeyEvent.VK_2), Integer.valueOf(1));
-        KEY_MAP.put(Integer.valueOf(KeyEvent.VK_3), Integer.valueOf(2));
+        KEY_MAP.put(KeyEvent.VK_1, 0);
+        KEY_MAP.put(KeyEvent.VK_2, 1);
+        KEY_MAP.put(KeyEvent.VK_3, 2);
         KEY_MAP.put(Integer.valueOf(KeyEvent.VK_4), Integer.valueOf(3));
         KEY_MAP.put(Integer.valueOf(KeyEvent.VK_Q), Integer.valueOf(4));
         KEY_MAP.put(Integer.valueOf(KeyEvent.VK_W), Integer.valueOf(5));
