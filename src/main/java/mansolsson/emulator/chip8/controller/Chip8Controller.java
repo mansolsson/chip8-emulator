@@ -31,7 +31,7 @@ public class Chip8Controller implements Runnable{
 
             chip8Service.executeProgramInstruction();
             if(chip8Service.shouldScreenBeUpdated()) {
-                SwingUtilities.invokeLater(() -> screen.repaint());
+                SwingUtilities.invokeLater(screen::repaint);
                 chip8Service.setScreenUpdated();
             }
             if(chip8Service.shouldSoundBePlayed()) {
