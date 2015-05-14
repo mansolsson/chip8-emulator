@@ -18,44 +18,16 @@ public class Chip8Service {
     }
 
     private void initializeChip8() {
-        byte[] registers = new byte[Chip8Constants.NR_OF_REGISTERS];
-        for (int i = 0; i < registers.length; i++) {
-            registers[i] = 0;
-        }
-        chip8.setRegisters(registers);
-
-        byte[] memory = new byte[Chip8Constants.MEMORY_SIZE];
-        for (int i = 0; i < memory.length; i++) {
-            memory[i] = 0;
-        }
-        chip8.setMemory(memory);
-
+        chip8.setRegisters(new byte[Chip8Constants.NR_OF_REGISTERS]);
+        chip8.setMemory(new byte[Chip8Constants.MEMORY_SIZE]);
         chip8.setAddressRegister(0);
         chip8.setPc(Chip8Constants.START_OF_PROGRAM_IN_MEMORY);
-
-        byte[] graphics = new byte[Chip8Constants.GRAPHICS_SIZE];
-        for (int i = 0; i < graphics.length; i++) {
-            graphics[i] = 0;
-        }
-        chip8.setGraphics(graphics);
-
+        chip8.setGraphics(new byte[Chip8Constants.GRAPHICS_SIZE]);
         chip8.setDelayTimer((byte) 0);
         chip8.setSoundTimer((byte) 0);
-
-        int[] stack = new int[Chip8Constants.STACK_SIZE];
-        for (int i = 0; i < stack.length; i++) {
-            stack[i] = 0;
-        }
-        chip8.setStack(stack);
-
+        chip8.setStack(new int[Chip8Constants.STACK_SIZE]);
         chip8.setStackPointer(-1);
-
-        int[] keys = new int[Chip8Constants.NR_OF_KEYS];
-        for (int i = 0; i < keys.length; i++) {
-            keys[i] = 0;
-        }
-        chip8.setKeys(keys);
-
+        chip8.setKeys(new int[Chip8Constants.NR_OF_KEYS]);
         chip8.setRedrawScreen(true);
         chip8.setPlaySound(false);
     }
