@@ -11,9 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestChip8Service {
@@ -109,27 +107,63 @@ public class TestChip8Service {
 
     @Test
     public void testSetScreenToBeUpdated() {
-        // TODO
+        chip8Service.setScreenToBeUpdated();
+
+        verify(chip8).setRedrawScreen(true);
+        verifyNoMoreInteractions(chip8);
     }
 
     @Test
     public void testScreenUpdated() {
-        // TODO
+        chip8Service.setScreenUpdated();
+
+        verify(chip8).setRedrawScreen(false);
+        verifyNoMoreInteractions(chip8);
     }
 
     @Test
     public void testPopStackIntoPc() {
-        // TODO
+        int currentStackPointer = 2;
+        when(chip8.getStackPointer()).thenReturn(currentStackPointer);
+        int[] stack = new int[Chip8Constants.STACK_SIZE];
+        stack[currentStackPointer] = 10;
+        when(chip8.getStack()).thenReturn(stack);
+
+        chip8Service.popStackIntoPc();
+
+        verify(chip8, times(2)).getStackPointer();
+        verify(chip8).setStackPointer(currentStackPointer - 1);
+        verify(chip8).getStack();
+        verify(chip8).setPc(10);
+        verifyNoMoreInteractions(chip8);
     }
 
     @Test
     public void testStorePcInStack() {
-        // TODO
+        int currentStackPointer = -1;
+        when(chip8.getStackPointer()).thenReturn(currentStackPointer);
+        int[] stack = new int[Chip8Constants.STACK_SIZE];
+        when(chip8.getStack()).thenReturn(stack);
+        when(chip8.getPc()).thenReturn(254);
+
+        chip8Service.storePcInStack();
+
+        verify(chip8).getStackPointer();
+        verify(chip8).setStackPointer(currentStackPointer + 1);
+        verify(chip8).getStack();
+        verify(chip8).getPc();
+        verifyNoMoreInteractions(chip8);
+        assertEquals(254, stack[currentStackPointer + 1]);
     }
 
     @Test
     public void setPc() {
-        // TODO
+        int pcValue = 254;
+
+        chip8Service.setPc(pcValue);
+
+        verify(chip8).setPc(pcValue);
+        verifyNoMoreInteractions(chip8);
     }
 
     @Test
