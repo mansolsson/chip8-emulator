@@ -167,18 +167,63 @@ public class TestChip8Service {
     }
 
     @Test
-    public void testRegistryAtEqualsValue() {
-        // TODO
+    public void testRegistryAtEqualsValueWhenEquals() {
+        byte value = (byte)0xFF;
+        when(chip8.getRegisters()).thenReturn(new byte[]{(byte) 0xFF});
+
+        boolean result = chip8Service.registryAtEqualsValue(0x0, value);
+
+        verify(chip8).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertTrue(result);
     }
 
     @Test
-    public void testRegistryAtEqualsRegistryAt() {
-        // TODO
+    public void testRegistryAtEqualsValueWhenNotEquals() {
+        byte value = (byte)0xFF;
+        when(chip8.getRegisters()).thenReturn(new byte[]{(byte)0xFE});
+
+        boolean result = chip8Service.registryAtEqualsValue(0x0, value);
+
+        verify(chip8).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertFalse(result);
+    }
+
+    @Test
+    public void testRegistryAtEqualsRegistryAtWhenEquals() {
+        when(chip8.getRegisters()).thenReturn(new byte[]{(byte) 0xFF, (byte) 0xFF});
+
+        boolean result = chip8Service.registryAtEqualsRegistryAt(0x0, 0x1);
+
+        verify(chip8, times(2)).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertTrue(result);
+    }
+
+    @Test
+    public void testRegistryAtEqualsRegistryAtWhenNotEquals() {
+        when(chip8.getRegisters()).thenReturn(new byte[]{(byte) 0xFE, (byte) 0xFF});
+
+        boolean result = chip8Service.registryAtEqualsRegistryAt(0x0, 0x1);
+
+        verify(chip8, times(2)).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertFalse(result);
     }
 
     @Test
     public void testSetRegistryAt() {
-        // TODO
+        byte[] registers = new byte[Chip8Constants.NR_OF_REGISTERS];
+        when(chip8.getRegisters()).thenReturn(registers);
+        byte value = (byte) 0xFB;
+        int registerIndex = 0x1;
+
+        chip8Service.setRegistryAt(registerIndex, value);
+
+        verify(chip8).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertEquals(value, registers[registerIndex]);
     }
 
     @Test
