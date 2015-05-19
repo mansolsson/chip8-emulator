@@ -227,43 +227,147 @@ public class TestChip8Service {
     }
 
     @Test
-    public void testAddToRegistryAt() {
-        // TODO
+    public void testAddToRegistryAtWithCarry() {
+        int registerIndex = 0;
+        byte[] registers = new byte[Chip8Constants.NR_OF_REGISTERS];
+        registers[registerIndex] = (byte)0xFE;
+        when(chip8.getRegisters()).thenReturn(registers);
+
+        boolean result = chip8Service.addToRegistryAt(registerIndex, (byte) 0x2);
+
+        verify(chip8, times(2)).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertTrue(result);
+        assertEquals((byte) 0, registers[registerIndex]);
+    }
+
+    @Test
+    public void testAddToRegistryAtWithoutCarry() {
+        int registerIndex = 0;
+        byte[] registers = new byte[Chip8Constants.NR_OF_REGISTERS];
+        registers[registerIndex] = (byte)0xFE;
+        when(chip8.getRegisters()).thenReturn(registers);
+
+        boolean result = chip8Service.addToRegistryAt(registerIndex, (byte) 0x1);
+
+        verify(chip8, times(2)).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertFalse(result);
+        assertEquals((byte) 0xFF, registers[registerIndex]);
     }
 
     @Test
     public void testGetRegistryAt() {
-        // TODO
+        int registerIndex = 0;
+        byte[] registers = new byte[Chip8Constants.NR_OF_REGISTERS];
+        registers[registerIndex] = (byte)0xFE;
+        when(chip8.getRegisters()).thenReturn(registers);
+
+        byte result = chip8Service.getRegistryAt(registerIndex);
+
+        verify(chip8).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertEquals((byte) 0xFE, result);
     }
 
     @Test
     public void testOrRegistryAt() {
-        // TODO
+        int registerIndex = 0;
+        byte[] registers = new byte[Chip8Constants.NR_OF_REGISTERS];
+        registers[registerIndex] = (byte) 0b10101010;
+        when(chip8.getRegisters()).thenReturn(registers);
+        byte input = (byte) 0b11110000;
+        byte expectedResult = (byte) 0b11111010;
+
+        chip8Service.orRegistryAt(registerIndex, input);
+
+        verify(chip8).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertEquals(expectedResult, registers[registerIndex]);
     }
 
     @Test
     public void testAndRegistryAt() {
-        // TODO
+        int registerIndex = 0;
+        byte[] registers = new byte[Chip8Constants.NR_OF_REGISTERS];
+        registers[registerIndex] = (byte) 0b10101010;
+        when(chip8.getRegisters()).thenReturn(registers);
+        byte input = (byte) 0b11110000;
+        byte expectedResult = (byte) 0b10100000;
+
+        chip8Service.andRegistryAt(registerIndex, input);
+
+        verify(chip8).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertEquals(expectedResult, registers[registerIndex]);
     }
 
     @Test
     public void testXorRegistryAt() {
-        // TODO
+        int registerIndex = 0;
+        byte[] registers = new byte[Chip8Constants.NR_OF_REGISTERS];
+        registers[registerIndex] = (byte) 0b10101010;
+        when(chip8.getRegisters()).thenReturn(registers);
+        byte input = (byte) 0b11110000;
+        byte expectedResult = (byte) 0b01011010;
+
+        chip8Service.xorRegistryAt(registerIndex, input);
+
+        verify(chip8).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertEquals(expectedResult, registers[registerIndex]);
     }
 
     @Test
-    public void testSubtractFromRegistry() {
-        // TODO
+    public void testSubtractFromRegistryWithoutBorrow() {
+        int registerIndex = 0;
+        byte[] registers = new byte[Chip8Constants.NR_OF_REGISTERS];
+        registers[registerIndex] = (byte)0xFE;
+        when(chip8.getRegisters()).thenReturn(registers);
+
+        boolean result = chip8Service.subtractFromRegistry(registerIndex, (byte) 0xFE);
+
+        verify(chip8, times(2)).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertEquals((byte) 0x0, registers[registerIndex]);
+        assertFalse(result);
+    }
+
+    @Test
+    public void testSubtractFromRegistryWithBorrow() {
+        int registerIndex = 0;
+        byte[] registers = new byte[Chip8Constants.NR_OF_REGISTERS];
+        registers[registerIndex] = (byte)0xFE;
+        when(chip8.getRegisters()).thenReturn(registers);
+
+        boolean result = chip8Service.subtractFromRegistry(registerIndex, (byte) 0xFF);
+
+        verify(chip8, times(2)).getRegisters();
+        verifyNoMoreInteractions(chip8);
+        assertEquals((byte) 0xFF, registers[registerIndex]);
+        assertTrue(result);
     }
 
     @Test
     public void testSetAddressRegister() {
-        // TODO
+        int input = 10;
+
+        chip8Service.setAddressRegister(input);
+
+        verify(chip8).setAddressRegister(input);
+        verifyNoMoreInteractions(chip8);
     }
 
     @Test
     public void testGetAddressRegister() {
-        // TODO
+        int expectedValue = 10;
+        when(chip8.getAddressRegister()).thenReturn(expectedValue);
+
+        int result = chip8Service.getAddressRegister();
+
+        verify(chip8).getAddressRegister();
+        verifyNoMoreInteractions(chip8);
+        assertEquals(expectedValue, result);
     }
 
     @Test

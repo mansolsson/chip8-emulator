@@ -127,7 +127,7 @@ public class Chip8Service {
         int result = (chip8.getRegisters()[registryIndex] & 0xFF) - (value & 0xFF);
         if (result < 0) {
             borrow = true;
-            result = 0xFF - (result * -1) - 1;
+            result = 0xFF - (result * -1) + 1;
         }
         chip8.getRegisters()[registryIndex] = (byte) result;
         return borrow;
