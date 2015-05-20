@@ -146,7 +146,8 @@ public class Chip8Service {
     }
 
     public synchronized byte[] getGraphics() {
-        return chip8.getGraphics() != null ? chip8.getGraphics() : new byte[0];
+        byte[] graphics = chip8.getGraphics();
+        return graphics != null ? graphics : new byte[0];
     }
 
     public byte getDelayTimer() {

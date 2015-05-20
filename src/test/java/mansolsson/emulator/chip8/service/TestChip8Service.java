@@ -372,27 +372,58 @@ public class TestChip8Service {
 
     @Test
     public void testGetMemory() {
-        // TODO
+        byte[] memory = new byte[Chip8Constants.MEMORY_SIZE];
+        when(chip8.getMemory()).thenReturn(memory);
+
+        byte[] result = chip8Service.getMemory();
+
+        verify(chip8).getMemory();
+        verifyNoMoreInteractions(chip8);
+        assertEquals(memory, result);
     }
 
     @Test
     public void testGetGraphics() {
-        // TODO
+        byte[] graphics = new byte[Chip8Constants.GRAPHICS_SIZE];
+        when(chip8.getGraphics()).thenReturn(graphics);
+
+        byte[] result = chip8Service.getGraphics();
+
+        verify(chip8).getGraphics();
+        verifyNoMoreInteractions(chip8);
+        assertEquals(graphics, result);
     }
 
     @Test
     public void testGetDelayTimer() {
-        // TODO
+        byte delayTimer = (byte) 0x20;
+        when(chip8.getDelayTimer()).thenReturn(delayTimer);
+
+        byte result = chip8Service.getDelayTimer();
+
+        verify(chip8).getDelayTimer();
+        verifyNoMoreInteractions(chip8);
+        assertEquals(delayTimer, result);
     }
 
     @Test
     public void testSetDelayTimer() {
-        // TODO
+        byte delayTimer = (byte) 0x20;
+
+        chip8Service.setDelayTimer(delayTimer);
+
+        verify(chip8).setDelayTimer(delayTimer);
+        verifyNoMoreInteractions(chip8);
     }
 
     @Test
     public void testSetSoundTimer() {
-        // TODO
+        byte soundTimer = (byte) 0x20;
+
+        chip8Service.setSoundTimer(soundTimer);
+
+        verify(chip8).setSoundTimer(soundTimer);
+        verifyNoMoreInteractions(chip8);
     }
 
     @Test
