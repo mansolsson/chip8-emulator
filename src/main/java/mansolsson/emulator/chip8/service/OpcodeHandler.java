@@ -23,7 +23,6 @@ public class OpcodeHandler {
                         break;
                     case 0x00EE:
                         chip8Service.popStackIntoPc();
-                        chip8Service.movePcToNextInstruction();
                         break;
                 }
                 break;

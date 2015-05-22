@@ -131,7 +131,7 @@ public class TestChip8Service {
 
         chip8Service.popStackIntoPc();
 
-        verify(chip8, times(2)).getStackPointer();
+        verify(chip8).getStackPointer();
         verify(chip8).setStackPointer(currentStackPointer - 1);
         verify(chip8).getStack();
         verify(chip8).setPc(10);
@@ -153,7 +153,7 @@ public class TestChip8Service {
         verify(chip8).getStack();
         verify(chip8).getPc();
         verifyNoMoreInteractions(chip8);
-        assertEquals(254, stack[currentStackPointer + 1]);
+        assertEquals(254 + Chip8Constants.NR_OF_BYTES_PER_INSTRUCTION, stack[currentStackPointer + 1]);
     }
 
     @Test
@@ -196,7 +196,7 @@ public class TestChip8Service {
 
         boolean result = chip8Service.registryAtEqualsRegistryAt(0x0, 0x1);
 
-        verify(chip8, times(2)).getRegisters();
+        verify(chip8).getRegisters();
         verifyNoMoreInteractions(chip8);
         assertTrue(result);
     }
@@ -207,7 +207,7 @@ public class TestChip8Service {
 
         boolean result = chip8Service.registryAtEqualsRegistryAt(0x0, 0x1);
 
-        verify(chip8, times(2)).getRegisters();
+        verify(chip8).getRegisters();
         verifyNoMoreInteractions(chip8);
         assertFalse(result);
     }
@@ -235,7 +235,7 @@ public class TestChip8Service {
 
         boolean result = chip8Service.addToRegistryAt(registerIndex, (byte) 0x2);
 
-        verify(chip8, times(2)).getRegisters();
+        verify(chip8).getRegisters();
         verifyNoMoreInteractions(chip8);
         assertTrue(result);
         assertEquals((byte) 0, registers[registerIndex]);
@@ -250,7 +250,7 @@ public class TestChip8Service {
 
         boolean result = chip8Service.addToRegistryAt(registerIndex, (byte) 0x1);
 
-        verify(chip8, times(2)).getRegisters();
+        verify(chip8).getRegisters();
         verifyNoMoreInteractions(chip8);
         assertFalse(result);
         assertEquals((byte) 0xFF, registers[registerIndex]);
@@ -327,7 +327,7 @@ public class TestChip8Service {
 
         boolean result = chip8Service.subtractFromRegistry(registerIndex, (byte) 0xFE);
 
-        verify(chip8, times(2)).getRegisters();
+        verify(chip8).getRegisters();
         verifyNoMoreInteractions(chip8);
         assertEquals((byte) 0x0, registers[registerIndex]);
         assertFalse(result);
@@ -342,7 +342,7 @@ public class TestChip8Service {
 
         boolean result = chip8Service.subtractFromRegistry(registerIndex, (byte) 0xFF);
 
-        verify(chip8, times(2)).getRegisters();
+        verify(chip8).getRegisters();
         verifyNoMoreInteractions(chip8);
         assertEquals((byte) 0xFF, registers[registerIndex]);
         assertTrue(result);
@@ -448,7 +448,7 @@ public class TestChip8Service {
 
         int result = chip8Service.getKey(keyIndex);
 
-        verify(chip8, times(2)).getKeys();
+        verify(chip8).getKeys();
         verifyNoMoreInteractions(chip8);
         assertEquals(1, result);
     }
@@ -473,7 +473,7 @@ public class TestChip8Service {
 
         chip8Service.setKey(keyIndex, 1);
 
-        verify(chip8, times(2)).getKeys();
+        verify(chip8).getKeys();
         verifyNoMoreInteractions(chip8);
         assertEquals(1, keys[keyIndex]);
     }
@@ -487,7 +487,7 @@ public class TestChip8Service {
 
         boolean result = chip8Service.subtractRegistryFromValue(registerIndex, (byte) 0xFE);
 
-        verify(chip8, times(2)).getRegisters();
+        verify(chip8).getRegisters();
         verifyNoMoreInteractions(chip8);
         assertEquals((byte) 0x0, registers[registerIndex]);
         assertFalse(result);
@@ -502,7 +502,7 @@ public class TestChip8Service {
 
         boolean result = chip8Service.subtractRegistryFromValue(registerIndex, (byte) 0xFE);
 
-        verify(chip8, times(2)).getRegisters();
+        verify(chip8).getRegisters();
         verifyNoMoreInteractions(chip8);
         assertEquals((byte) 0xFF, registers[registerIndex]);
         assertTrue(result);

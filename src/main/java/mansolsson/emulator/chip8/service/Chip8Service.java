@@ -70,13 +70,14 @@ public class Chip8Service {
 
     public void popStackIntoPc() {
         int[] stack = chip8.getStack();
-        chip8.setPc(stack[chip8.getStackPointer()]);
-        chip8.setStackPointer(chip8.getStackPointer() - 1);
+        int currentStackPointer = chip8.getStackPointer();
+        chip8.setPc(stack[currentStackPointer]);
+        chip8.setStackPointer(currentStackPointer - 1);
     }
 
     public void storePcInStack() {
         int newStackPointer = chip8.getStackPointer() + 1;
-        chip8.getStack()[newStackPointer] = chip8.getPc();
+        chip8.getStack()[newStackPointer] = chip8.getPc() + Chip8Constants.NR_OF_BYTES_PER_INSTRUCTION;
         chip8.setStackPointer(newStackPointer);
     }
 
@@ -89,7 +90,8 @@ public class Chip8Service {
     }
 
     public boolean registryAtEqualsRegistryAt(int registryIndex1, int registryIndex2) {
-        return chip8.getRegisters()[registryIndex1] == chip8.getRegisters()[registryIndex2];
+        byte[] registers = chip8.getRegisters();
+        return registers[registryIndex1] == registers[registryIndex2];
     }
 
     public void setRegistryAt(int registryIndex, byte value) {
@@ -97,12 +99,13 @@ public class Chip8Service {
     }
 
     public boolean addToRegistryAt(int registryIndex, byte value) {
+        byte[] registers = chip8.getRegisters();
         boolean carry = false;
-        int sum = (chip8.getRegisters()[registryIndex] & 0xFF) + (value & 0xFF);
+        int sum = (registers[registryIndex] & 0xFF) + (value & 0xFF);
         if (sum > 0xFF) {
             carry = true;
         }
-        chip8.getRegisters()[registryIndex] = (byte) sum;
+        registers[registryIndex] = (byte) sum;
         return carry;
     }
 
@@ -123,13 +126,14 @@ public class Chip8Service {
     }
 
     public boolean subtractFromRegistry(int registryIndex, byte value) {
+        byte[] registers = chip8.getRegisters();
         boolean borrow = false;
-        int result = (chip8.getRegisters()[registryIndex] & 0xFF) - (value & 0xFF);
+        int result = (registers[registryIndex] & 0xFF) - (value & 0xFF);
         if (result < 0) {
             borrow = true;
             result = 0xFF - (result * -1) + 1;
         }
-        chip8.getRegisters()[registryIndex] = (byte) result;
+        registers[registryIndex] = (byte) result;
         return borrow;
     }
 
@@ -163,23 +167,26 @@ public class Chip8Service {
     }
 
     public synchronized int getKey(int index) {
-        if(chip8.getKeys() != null) {
-            return chip8.getKeys()[index];
+        int[] keys = chip8.getKeys();
+        if(keys != null) {
+            return keys[index];
         }
         return 0;
     }
 
     public synchronized void setKey(int index, int value) {
-        if(chip8.getKeys() != null) {
-            chip8.getKeys()[index] = value;
+        int[] keys = chip8.getKeys();
+        if(keys != null) {
+            keys[index] = value;
         }
     }
 
     public boolean subtractRegistryFromValue(int registryIndex, byte value) {
-        int registerValue = chip8.getRegisters()[registryIndex] & 0xFF;
+        byte[] registers = chip8.getRegisters();
+        int registerValue = registers[registryIndex] & 0xFF;
         boolean borrow = registerValue > (value & 0xFF);
         int result = (value | 0x100) - registerValue;
-        chip8.getRegisters()[registryIndex] = (byte) (result & 0xFF);
+        registers[registryIndex] = (byte) (result & 0xFF);
         return borrow;
     }
 
@@ -192,7 +199,7 @@ public class Chip8Service {
                 int index = (x + columnIndex) % 64 + (rowIndex + y) * 64;
                 // TODO: Probably a bug making it possible for the index to be out of range
                 if(index > 2047) {
-                    index = 2047;
+                    continue;
                 }
                 if((memoryRow & (0b10000000 >> columnIndex)) != 0) {
                     if(graphics[index] == 1) {

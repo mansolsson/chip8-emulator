@@ -32,7 +32,6 @@ public class TestOpcodeHandler {
         opcodeHandler.executeOpcode(0x00EE);
 
         verify(chip8Service).popStackIntoPc();
-        verify(chip8Service).movePcToNextInstruction();
         verifyNoMoreInteractions(chip8Service);
     }
 
