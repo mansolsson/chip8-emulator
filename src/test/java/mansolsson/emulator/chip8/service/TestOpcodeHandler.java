@@ -499,7 +499,22 @@ public class TestOpcodeHandler {
     }
 
     @Test
-    public void testExecuteOpcode0xFX1E() {
+    public void testExecuteOpcode0xFX1EWithOverflow() {
+        when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0xFE);
+        when(chip8Service.getAddressRegister()).thenReturn(0xFFF);
+
+        opcodeHandler.executeOpcode(0xFA1E);
+
+        verify(chip8Service).getAddressRegister();
+        verify(chip8Service).getRegistryAt(0xA);
+        verify(chip8Service).setAddressRegister(0xFE - 1);
+        verify(chip8Service).setRegistryAt(0xF, (byte) 1);
+        verify(chip8Service).movePcToNextInstruction();
+        verifyNoMoreInteractions(chip8Service);
+    }
+
+    @Test
+    public void testExecuteOpcode0xFX1EWithoutOverflow() {
         when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0xFE);
         when(chip8Service.getAddressRegister()).thenReturn(0x10);
 
@@ -508,6 +523,7 @@ public class TestOpcodeHandler {
         verify(chip8Service).getAddressRegister();
         verify(chip8Service).getRegistryAt(0xA);
         verify(chip8Service).setAddressRegister(0x10 + 0xFE);
+        verify(chip8Service).setRegistryAt(0xF, (byte) 0);
         verify(chip8Service).movePcToNextInstruction();
         verifyNoMoreInteractions(chip8Service);
     }
@@ -555,7 +571,7 @@ public class TestOpcodeHandler {
             when(chip8Service.getRegistryAt(i)).thenReturn((byte) (i + 1));
         }
 
-        opcodeHandler.executeOpcode(0xF055);
+        opcodeHandler.executeOpcode(0xFF55);
 
         verify(chip8Service).getMemory();
         verify(chip8Service).getAddressRegister();
@@ -588,7 +604,7 @@ public class TestOpcodeHandler {
         when(chip8Service.getMemory()).thenReturn(memory);
         when(chip8Service.getAddressRegister()).thenReturn(1);
 
-        opcodeHandler.executeOpcode(0xF065);
+        opcodeHandler.executeOpcode(0xFF65);
 
         verify(chip8Service).getMemory();
         verify(chip8Service).getAddressRegister();

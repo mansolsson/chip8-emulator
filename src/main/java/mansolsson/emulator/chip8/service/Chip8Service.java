@@ -195,10 +195,6 @@ public class Chip8Service {
             int memoryRow = getMemory()[getAddressRegister() + rowIndex] & 0xFF;
             for(int columnIndex = 0; columnIndex < 8; columnIndex++) {
                 int index = (x + columnIndex) % 64 + (rowIndex + y) * 64;
-                // TODO: Probably a bug making it possible for the index to be out of range
-                if(index > 2047) {
-                    continue;
-                }
                 if((memoryRow & (0b10000000 >> columnIndex)) != 0) {
                     if(graphics[index] == 1) {
                         carryFlag = true;
