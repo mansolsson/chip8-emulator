@@ -41,14 +41,14 @@ public class Chip8KeyboardListener implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if(KEY_MAP.containsKey(e.getKeyCode())) {
-            chip8Service.setKey(KEY_MAP.get(e.getKeyCode()), 1);
+            chip8Service.setKey(KEY_MAP.get(e.getKeyCode()), true);
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         if(KEY_MAP.containsKey(e.getKeyCode())) {
-            chip8Service.setKey(KEY_MAP.get(e.getKeyCode()), 0);
+            chip8Service.setKey(KEY_MAP.get(e.getKeyCode()), false);
         }
     }
 }

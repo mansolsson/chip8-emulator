@@ -10,7 +10,7 @@ public class Chip8 {
     private byte soundTimer;
     private int[] stack;
     private int stackPointer;
-    private int[] keys;
+    private boolean[] keys;
     private boolean redrawScreen;
     private boolean playSound;
 
@@ -86,11 +86,11 @@ public class Chip8 {
         this.stackPointer = stackPointer;
     }
 
-    public int[] getKeys() {
+    public boolean[] getKeys() {
         return keys;
     }
 
-    public void setKeys(int[] keys) {
+    public void setKeys(boolean[] keys) {
         this.keys = keys;
     }
 

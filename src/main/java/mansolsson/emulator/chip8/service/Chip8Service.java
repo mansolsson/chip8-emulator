@@ -27,7 +27,7 @@ public class Chip8Service {
         chip8.setSoundTimer((byte) 0);
         chip8.setStack(new int[Chip8Constants.STACK_SIZE]);
         chip8.setStackPointer(-1);
-        chip8.setKeys(new int[Chip8Constants.NR_OF_KEYS]);
+        chip8.setKeys(new boolean[Chip8Constants.NR_OF_KEYS]);
         chip8.setRedrawScreen(true);
         chip8.setPlaySound(false);
     }
@@ -166,16 +166,13 @@ public class Chip8Service {
         chip8.setSoundTimer(value);
     }
 
-    public synchronized int getKey(int index) {
-        int[] keys = chip8.getKeys();
-        if(keys != null) {
-            return keys[index];
-        }
-        return 0;
+    public synchronized boolean getKey(int index) {
+        boolean[] keys = chip8.getKeys();
+        return keys != null && keys[index];
     }
 
-    public synchronized void setKey(int index, int value) {
-        int[] keys = chip8.getKeys();
+    public synchronized void setKey(int index, boolean value) {
+        boolean[] keys = chip8.getKeys();
         if(keys != null) {
             keys[index] = value;
         }

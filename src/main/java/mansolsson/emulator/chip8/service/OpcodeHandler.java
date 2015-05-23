@@ -138,13 +138,13 @@ public class OpcodeHandler {
             case 0xE000:
                 switch (opcode & 0x00FF) {
                     case 0x009E:
-                        if (chip8Service.getKey(chip8Service.getRegistryAt((opcode & 0x0F00) >> 8)) == 1) {
+                        if (chip8Service.getKey(chip8Service.getRegistryAt((opcode & 0x0F00) >> 8))) {
                             chip8Service.movePcToNextInstruction();
                         }
                         chip8Service.movePcToNextInstruction();
                         break;
                     case 0x00A1:
-                        if (chip8Service.getKey(chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) & 0xF) == 0) {
+                        if (!chip8Service.getKey(chip8Service.getRegistryAt((opcode & 0x0F00) >> 8) & 0xF)) {
                             chip8Service.movePcToNextInstruction();
                         }
                         chip8Service.movePcToNextInstruction();
@@ -159,7 +159,7 @@ public class OpcodeHandler {
                         break;
                     case 0x000A:
                         for (int i = 0; i < Chip8Constants.NR_OF_KEYS; i++) {
-                            if (chip8Service.getKey(i) == 1) {
+                            if (chip8Service.getKey(i)) {
                                 chip8Service.setRegistryAt((opcode & 0x0F00) >> 8, (byte) i);
                                 chip8Service.movePcToNextInstruction();
                                 break;

@@ -389,7 +389,7 @@ public class TestOpcodeHandler {
     @Test
     public void testExecuteOpcode0xEX9EWhenKeyPressed() {
         when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
-        when(chip8Service.getKey(1)).thenReturn(1);
+        when(chip8Service.getKey(1)).thenReturn(true);
 
         opcodeHandler.executeOpcode(0xEA9E);
 
@@ -402,7 +402,7 @@ public class TestOpcodeHandler {
     @Test
     public void testExecuteOpcode0xEX9EWhenKeyNotPressed() {
         when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
-        when(chip8Service.getKey(0xA)).thenReturn(0);
+        when(chip8Service.getKey(0xA)).thenReturn(false);
 
         opcodeHandler.executeOpcode(0xEA9E);
 
@@ -415,7 +415,7 @@ public class TestOpcodeHandler {
     @Test
     public void testExecuteOpcode0xEXA1WhenKeyPressed() {
         when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
-        when(chip8Service.getKey(1)).thenReturn(1);
+        when(chip8Service.getKey(1)).thenReturn(true);
 
         opcodeHandler.executeOpcode(0xEAA1);
 
@@ -428,7 +428,7 @@ public class TestOpcodeHandler {
     @Test
     public void testExecuteOpcode0xEXA1WhenKeyNotPressed() {
         when(chip8Service.getRegistryAt(0xA)).thenReturn((byte) 0x1);
-        when(chip8Service.getKey(anyInt())).thenReturn(0);
+        when(chip8Service.getKey(anyInt())).thenReturn(false);
 
         opcodeHandler.executeOpcode(0xEAA1);
 
@@ -451,10 +451,10 @@ public class TestOpcodeHandler {
 
     @Test
     public void testExecuteOpcode0xFX0AWhenKeyPressed() {
-        when(chip8Service.getKey(0)).thenReturn(0);
-        when(chip8Service.getKey(1)).thenReturn(0);
-        when(chip8Service.getKey(2)).thenReturn(0);
-        when(chip8Service.getKey(3)).thenReturn(1);
+        when(chip8Service.getKey(0)).thenReturn(false);
+        when(chip8Service.getKey(1)).thenReturn(false);
+        when(chip8Service.getKey(2)).thenReturn(false);
+        when(chip8Service.getKey(3)).thenReturn(true);
 
         opcodeHandler.executeOpcode(0xFA0A);
 
@@ -466,7 +466,7 @@ public class TestOpcodeHandler {
 
     @Test
     public void testExecuteOpcode0xFX0AWhenKeyNotPressed() {
-        when(chip8Service.getKey(anyInt())).thenReturn(0);
+        when(chip8Service.getKey(anyInt())).thenReturn(false);
 
         opcodeHandler.executeOpcode(0xFA0A);
 

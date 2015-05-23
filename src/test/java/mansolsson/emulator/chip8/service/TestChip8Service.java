@@ -429,37 +429,35 @@ public class TestChip8Service {
     @Test
     public void testGetKeyWhenKeysAreNull() {
         int keyIndex = 1;
-        int[] keys = null;
-        when(chip8.getKeys()).thenReturn(keys);
+        when(chip8.getKeys()).thenReturn(null);
 
-        int result = chip8Service.getKey(keyIndex);
+        boolean result = chip8Service.getKey(keyIndex);
 
         verify(chip8).getKeys();
         verifyNoMoreInteractions(chip8);
-        assertEquals(0, result);
+        assertFalse(result);
     }
 
     @Test
     public void testGetKeyWhenKeysAreNotNull() {
         int keyIndex = 1;
-        int[] keys = new int[Chip8Constants.NR_OF_KEYS];
-        keys[keyIndex] = 1;
+        boolean[] keys = new boolean[Chip8Constants.NR_OF_KEYS];
+        keys[keyIndex] = true;
         when(chip8.getKeys()).thenReturn(keys);
 
-        int result = chip8Service.getKey(keyIndex);
+        boolean result = chip8Service.getKey(keyIndex);
 
         verify(chip8).getKeys();
         verifyNoMoreInteractions(chip8);
-        assertEquals(1, result);
+        assertTrue(result);
     }
 
     @Test
     public void testSetKeyWhenKeysAreNull() {
         int keyIndex = 1;
-        int[] keys = null;
-        when(chip8.getKeys()).thenReturn(keys);
+        when(chip8.getKeys()).thenReturn(null);
 
-        chip8Service.setKey(keyIndex, 1);
+        chip8Service.setKey(keyIndex, true);
 
         verify(chip8).getKeys();
         verifyNoMoreInteractions(chip8);
@@ -468,14 +466,14 @@ public class TestChip8Service {
     @Test
     public void testSetKeyWhenKeysAreNotNull() {
         int keyIndex = 1;
-        int[] keys = new int[Chip8Constants.NR_OF_KEYS];
+        boolean[] keys = new boolean[Chip8Constants.NR_OF_KEYS];
         when(chip8.getKeys()).thenReturn(keys);
 
-        chip8Service.setKey(keyIndex, 1);
+        chip8Service.setKey(keyIndex, true);
 
         verify(chip8).getKeys();
         verifyNoMoreInteractions(chip8);
-        assertEquals(1, keys[keyIndex]);
+        assertTrue(keys[keyIndex]);
     }
 
     @Test
