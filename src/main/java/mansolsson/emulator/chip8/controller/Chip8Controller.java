@@ -11,6 +11,8 @@ import java.nio.file.Paths;
 import java.util.Date;
 
 public class Chip8Controller implements Runnable{
+    private static final long MILLISECONDS_PER_INSTRUCTION = 10;
+
     private String programPath;
     private Chip8Service chip8Service;
     private EmulatorScreen screen;
@@ -24,7 +26,6 @@ public class Chip8Controller implements Runnable{
         byte[] program = readProgramFromFile();
         chip8Service.loadProgram(program);
 
-        long target = 1000 / 500;
         boolean programRunning = true;
         while(programRunning) {
             Date before = new Date();
@@ -37,12 +38,14 @@ public class Chip8Controller implements Runnable{
             if(chip8Service.shouldSoundBePlayed()) {
                 // Play sound
             }
-            chip8Service.setDelayTimer((byte)(chip8Service.getDelayTimer() - 1));
+            if(chip8Service.getDelayTimer() != 0) {
+                chip8Service.setDelayTimer((byte)((chip8Service.getDelayTimer() & 0xFF) - 1));
+            }
 
             Date after = new Date();
 
-            long milliseconds = after.getTime() - before.getTime();
-            long timeToWait = target - milliseconds;
+            long millisecondsSpent = after.getTime() - before.getTime();
+            long timeToWait = MILLISECONDS_PER_INSTRUCTION - millisecondsSpent;
 
             if(timeToWait > 0) {
                 Thread.sleep(timeToWait);

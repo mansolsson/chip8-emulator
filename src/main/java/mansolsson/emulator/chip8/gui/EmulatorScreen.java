@@ -35,7 +35,7 @@ public class EmulatorScreen extends JFrame {
     }
 
     protected byte[] getChip8Graphics() {
-        return chip8Controller.getChip8Service().getGraphics() != null ? chip8Controller.getChip8Service().getGraphics() : new byte[0];
+        return chip8Controller.getChip8Service().getGraphics();
     }
 
     protected Chip8Controller getChip8Controller() {
