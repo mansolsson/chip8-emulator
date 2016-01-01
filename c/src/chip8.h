@@ -26,11 +26,14 @@ struct chip8 {
 	uint8_t delay_timer;
 };
 
+void init_chip8(struct chip8 *c);
+void init_memory(struct chip8 *c);
 void execute_opcode(struct chip8 *c, uint16_t opcode);
 void clear_screen(struct chip8 *c);
 void return_from_subroutine(struct chip8 *c);
 void jump(struct chip8 *c, uint16_t address);
 void call_subroutine(struct chip8 *c, uint16_t address);
 void draw_sprite(struct chip8 *c, int screen_x, int screen_y, int rows);
+void load_program(struct chip8 *c, char *path);
 
 #endif

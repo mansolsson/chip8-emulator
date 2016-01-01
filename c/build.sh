@@ -9,7 +9,7 @@ prepare() {
 }
 
 run_opcode_test() {
-	gcc src/chip8.c test/chip8_test.c -lcheck -lm -lpthread -lrt -o build/test/chip8;
+	gcc src/chip8.c test/chip8_test.c -std=gnu99 -lcheck -lm -lpthread -lrt -o build/test/chip8;
 	build/test/chip8;
 }
 

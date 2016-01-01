@@ -3,19 +3,107 @@
 #include <stdint.h>
 #include "../src/chip8.h"
 
+START_TEST (init_chip8_clears_screen) 
+{
+	struct chip8 c;
+
+	init_chip8(&c);
+
+	for(int i = 0; i < SCREEN_SIZE; i++) {
+		ck_assert(c.screen[i] == false);	
+	}
+}
+END_TEST
+
+START_TEST (init_chip8_set_all_keys_not_pressed)
+{
+	struct chip8 c;
+
+	init_chip8(&c);
+
+	for(int i = 0; i < NR_KEYS; i++) {
+		ck_assert(c.keys[i] == false);
+	}
+}
+END_TEST
+
+START_TEST (init_chip8_place_sprites_in_memory)
+{
+	struct chip8 c;
+
+	init_chip8(&c);
+
+	for(int i = 0; i < 5 * 16; i++) {
+		ck_assert(c.memory[i] != 0);
+	}
+}
+END_TEST
+
+START_TEST (init_chip8_clear_memory) 
+{
+	struct chip8 c;
+
+	init_chip8(&c);
+
+	int after_sprites = 5 * 16;
+	for(int i = after_sprites; i < MEMORY_SIZE; i++) {
+		ck_assert(c.memory[i] == 0);
+	}
+}
+END_TEST
+
+START_TEST (init_chip8_pc_set_to_start_of_program)
+{
+	struct chip8 c;
+
+	init_chip8(&c);
+
+	ck_assert(c.pc == 0);
+}
+END_TEST
+
+START_TEST (init_chip8_stack_index_set_to_zero) 
+{
+	struct chip8 c;
+
+	init_chip8(&c);
+
+	ck_assert(c.stack_index == 0);
+}
+END_TEST
+
+START_TEST (init_chip8_sound_timer_set_to_zero) 
+{
+	struct chip8 c;
+
+	init_chip8(&c);
+
+	ck_assert(c.sound_timer == 0);
+}
+END_TEST
+
+START_TEST (init_chip8_delay_timer_set_to_zero) 
+{
+	struct chip8 c;
+
+	init_chip8(&c);
+
+	ck_assert(c.delay_timer == 0);
+}
+END_TEST
+
 START_TEST (opcode_00E0_clears_screen) 
 {
 	struct chip8 c;
 	uint16_t opcode = 0x00E0;
-	int i;
-	for(i = 0; i < SCREEN_SIZE; i++) {
+	for(int i = 0; i < SCREEN_SIZE; i++) {
 		c.screen[i] = true;
 	}
 	c.pc = 0;
 
 	execute_opcode(&c, opcode);
 
-	for(i = 0; i < SCREEN_SIZE; i++) {
+	for(int i = 0; i < SCREEN_SIZE; i++) {
 		ck_assert(c.screen[i] == false);	
 	}
 	ck_assert(c.pc == BYTES_PER_INSTRUCTION);
@@ -822,6 +910,15 @@ Suite * opcode_suite()
 
     suite = suite_create("Opcode");
     tc_core = tcase_create("Core");
+
+    tcase_add_test(tc_core, init_chip8_clears_screen);
+    tcase_add_test(tc_core, init_chip8_clear_memory);
+    tcase_add_test(tc_core, init_chip8_place_sprites_in_memory);
+    tcase_add_test(tc_core, init_chip8_set_all_keys_not_pressed);
+    tcase_add_test(tc_core, init_chip8_stack_index_set_to_zero);
+    tcase_add_test(tc_core, init_chip8_pc_set_to_start_of_program);
+    tcase_add_test(tc_core, init_chip8_delay_timer_set_to_zero);
+    tcase_add_test(tc_core, init_chip8_sound_timer_set_to_zero);
 
     tcase_add_test(tc_core, opcode_00E0_clears_screen);
 	tcase_add_test(tc_core, opcode_00EE_sets_pc_to_address_in_stack);
