@@ -13,7 +13,7 @@ void init_chip8(struct chip8 *c)
 		c->keys[i] = false;
 	}
 	init_memory(c);
-	c->pc = 0;
+	c->pc = PROGRAM_START;
 	c->stack_index = 0;
 	c->sound_timer = 0;
 	c->delay_timer = 0;

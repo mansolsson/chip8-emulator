@@ -58,7 +58,7 @@ START_TEST (init_chip8_pc_set_to_start_of_program)
 
 	init_chip8(&c);
 
-	ck_assert(c.pc == 0);
+	ck_assert(c.pc == PROGRAM_START);
 }
 END_TEST
 

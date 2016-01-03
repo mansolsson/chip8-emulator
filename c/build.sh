@@ -13,8 +13,13 @@ run_opcode_test() {
 	build/test/chip8;
 }
 
+compile() {
+	gcc src/chip8.c src/graphics.c src/emulator.c src/main.c -std=gnu99 -lSDL2 -lm -o build/chip8;
+}
+
 main() {
 	prepare;
 	run_opcode_test;
+	compile;
 }
 main;
