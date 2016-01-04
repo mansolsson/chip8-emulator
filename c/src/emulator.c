@@ -6,6 +6,8 @@
 #include "graphics.h"
 
 #define OPCODES_PER_SECOND 500
+#define TIMER_COUNTDOWN_PER_SECOND 60
+#define MS_PER_COUNTDOWN (1000 / TIMER_COUNTDOWN_PER_SECOND)
 #define MS_PER_INSTRUCTION (1000 / OPCODES_PER_SECOND)
 
 void start_program(char *program_path)
@@ -17,6 +19,7 @@ void start_program(char *program_path)
 
 	create_window();
 	SDL_Event e;
+	long cd = 0;
 
 	while(game_running) {
 		long before = get_current_time_ms();
@@ -42,16 +45,23 @@ void start_program(char *program_path)
 		opcode <<= 8;
 		opcode += c.memory[c.pc + 1];
 		execute_opcode(&c, opcode);
-		if(c.delay_timer > 0) {
-			c.delay_timer--;	
-		}
-		if(c.sound_timer > 0) {
-			c.sound_timer--;
-		}
 		clear_window();
 		update_window(c.screen);
 		refresh_window();
-		long time_to_sleep = MS_PER_INSTRUCTION - (get_current_time_ms() - before);
+
+		long elapsed_time = get_current_time_ms() - before;
+		long time_to_sleep = MS_PER_INSTRUCTION - elapsed_time;
+		cd += elapsed_time;
+		if(cd >= MS_PER_COUNTDOWN) {
+			if(c.delay_timer > 0) {
+				c.delay_timer--;	
+			}
+			if(c.sound_timer > 0) {
+				c.sound_timer--;
+			}	
+			cd = 0;
+		}
+
 		if(time_to_sleep > 0) {
 			SDL_Delay(time_to_sleep);
 		}
