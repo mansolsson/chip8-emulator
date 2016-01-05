@@ -26,7 +26,7 @@ void create_window()
 void clear_window() 
 {
 	SDL_Surface * screenSurface = SDL_GetWindowSurface(window); 
-	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF)); 
+	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00)); 
 }
 
 void refresh_window()
@@ -44,7 +44,7 @@ void draw_rectangle(int x, int y, int width, int height)
 	srcrect.w = width;
 	srcrect.h = height;
 
-	SDL_FillRect(screenSurface, &srcrect, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00)); 
+	SDL_FillRect(screenSurface, &srcrect, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF)); 
 }
 
 void close_window()
