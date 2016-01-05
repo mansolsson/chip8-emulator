@@ -139,6 +139,8 @@ void execute_opcode(struct chip8 *c, uint16_t opcode)
 		case 0x00EE:
 			return_from_subroutine(c);
 			break;
+		default:
+			handle_unknown_opcode(opcode);
 		}
 		break;
 	case 0x1000:
@@ -217,6 +219,8 @@ void execute_opcode(struct chip8 *c, uint16_t opcode)
 			c->registers[(opcode & 0x0F00) >> 8] <<= 1;
 			c->pc += BYTES_PER_INSTRUCTION;
 			break;
+		default:
+			handle_unknown_opcode(opcode);
 		}
 		break;
 	case 0x9000:
@@ -255,6 +259,8 @@ void execute_opcode(struct chip8 *c, uint16_t opcode)
 			}
 			c->pc += BYTES_PER_INSTRUCTION;
 			break;
+		default:
+			handle_unknown_opcode(opcode);
 		}
 		break;
 	case 0xF000:
@@ -311,9 +317,19 @@ void execute_opcode(struct chip8 *c, uint16_t opcode)
 			}
 			c->pc += BYTES_PER_INSTRUCTION;
 			break;
+		default:
+			handle_unknown_opcode(opcode);
 		}
 		break;
+	default:
+		handle_unknown_opcode(opcode);
 	}
+}
+
+void handle_unknown_opcode(uint16_t opcode)
+{
+	fprintf(stderr, "Unknown opcode encoutered %u, aborting program\n", opcode);
+	exit(1);
 }
 
 void clear_screen(struct chip8 *c) 
@@ -361,6 +377,7 @@ void load_program(struct chip8 *c, char *path)
 	init_chip8(c);
 	FILE *fp;
 	if((fp = fopen(path, "r")) == NULL) {
+		fprintf(stderr, "File not found: %s\n", path);
 		exit(1);
 	}
 	fread(c->memory + PROGRAM_START, sizeof(uint8_t), MEMORY_SIZE - PROGRAM_START, fp);

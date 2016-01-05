@@ -3,19 +3,12 @@
 #include <SDL2/SDL.h>
 #include "emulator.h"
 
-void print_usage(char *program);
-
 int main(int argc, char **argv)
 {
 	if(argc != 2) {
-		print_usage(argv[0]);
+		fprintf(stderr, "usage: %s <path-to-program>\n", argv[0]);
+		exit(1);
 	}
 	start_program(argv[1]);
 	return 0;
-}
-
-void print_usage(char *program)
-{
-	fprintf(stderr, "usage: %s <path-to-program>\n", program);
-	exit(1);
 }

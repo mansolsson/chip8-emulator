@@ -11,13 +11,13 @@ void create_window()
 {
     SDL_Surface *screenSurface = NULL; 
     if(SDL_Init(SDL_INIT_VIDEO) < 0) { 
-        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        fprintf(stderr, "Failed to initialize SDL: %s\n", SDL_GetError());
         exit(1);
     } else {
-    	window = SDL_CreateWindow( "Chip-8 Emulator", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
+    	window = SDL_CreateWindow("Chip-8 Emulator", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
     		SCREEN_WIDTH * SCALE, SCREEN_HEIGHT * SCALE, SDL_WINDOW_SHOWN); 
-    	if( window == NULL ) { 
-    		printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+    	if(window == NULL) { 
+    		fprintf(stderr, "Failed to create window: %s\n", SDL_GetError());
     		exit(1);
     	}
     }
@@ -25,31 +25,31 @@ void create_window()
 
 void clear_window() 
 {
-	SDL_Surface * screenSurface = SDL_GetWindowSurface( window ); 
-	SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) ); 
+	SDL_Surface * screenSurface = SDL_GetWindowSurface(window); 
+	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF)); 
 }
 
 void refresh_window()
 {
-	SDL_Surface * screenSurface = SDL_GetWindowSurface( window ); 
+	SDL_Surface * screenSurface = SDL_GetWindowSurface(window); 
 	SDL_UpdateWindowSurface(window);
 }
 
 void draw_rectangle(int x, int y, int width, int height)
 {
-	SDL_Surface * screenSurface = SDL_GetWindowSurface( window ); 
+	SDL_Surface * screenSurface = SDL_GetWindowSurface(window);
 	SDL_Rect srcrect;
 	srcrect.x = x;
 	srcrect.y = y;
 	srcrect.w = width;
 	srcrect.h = height;
 
-	SDL_FillRect( screenSurface, &srcrect, SDL_MapRGB( screenSurface->format, 0x00, 0x00, 0x00)); 
+	SDL_FillRect(screenSurface, &srcrect, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00)); 
 }
 
 void close_window()
 {
-	SDL_DestroyWindow( window ); 
+	SDL_DestroyWindow(window);
     SDL_Quit();
 }
 

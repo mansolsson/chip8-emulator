@@ -29,6 +29,7 @@ struct chip8 {
 void init_chip8(struct chip8 *c);
 void init_memory(struct chip8 *c);
 void execute_opcode(struct chip8 *c, uint16_t opcode);
+void handle_unknown_opcode(uint16_t opcode);
 void clear_screen(struct chip8 *c);
 void return_from_subroutine(struct chip8 *c);
 void jump(struct chip8 *c, uint16_t address);
