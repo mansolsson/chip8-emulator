@@ -31,11 +31,11 @@ void init_memory(struct chip8 *c)
 	c->memory[3] = 0b10010000;
 	c->memory[4] = 0b01100000;
 	// 1
-	c->memory[5] = 0b01100000;
-	c->memory[6] = 0b01100000;
-	c->memory[7] = 0b01100000;
-	c->memory[8] = 0b01100000;
-	c->memory[9] = 0b01100000;
+	c->memory[5] = 0b00010000;
+	c->memory[6] = 0b00010000;
+	c->memory[7] = 0b00010000;
+	c->memory[8] = 0b00010000;
+	c->memory[9] = 0b00010000;
 	// 2
 	c->memory[10] = 0b11110000;
 	c->memory[11] = 0b00010000;
