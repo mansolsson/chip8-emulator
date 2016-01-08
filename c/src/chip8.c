@@ -6,10 +6,10 @@
 
 void init_chip8(struct chip8 *c)
 {
-	for(int i = 0; i < SCREEN_SIZE; i++) {
+	for(uint32_t i = 0; i < SCREEN_SIZE; i++) {
 		c->screen[i] = false;
 	}
-	for(int i = 0; i < NR_KEYS; i++) {
+	for(uint32_t i = 0; i < NR_KEYS; i++) {
 		c->keys[i] = false;
 	}
 	init_memory(c);
@@ -21,7 +21,7 @@ void init_chip8(struct chip8 *c)
 
 void init_memory(struct chip8 *c) 
 {
-	for(int i = 0; i < MEMORY_SIZE; ++i) {
+	for(uint32_t i = 0; i < MEMORY_SIZE; ++i) {
 		c->memory[i] = 0;
 	}
 	// 0
@@ -124,7 +124,7 @@ void init_memory(struct chip8 *c)
 
 void execute_opcode(struct chip8 *c, uint16_t opcode)
 {
-	int i;
+	uint32_t i;
 	uint8_t org_value;
 	bool key_pressed;
 
@@ -305,13 +305,13 @@ void execute_opcode(struct chip8 *c, uint16_t opcode)
 			c->pc += BYTES_PER_INSTRUCTION;
 			break;
 		case 0x55:
-			for(i = 0; i <= ((opcode & 0x0F00) >> 8); i++) {
+			for(i = 0; i <= ((opcode & 0x0F00u) >> 8); i++) {
 				c->memory[c->address_register + i] = c->registers[i];
 			}
 			c->pc += BYTES_PER_INSTRUCTION;
 			break;
 		case 0x65:
-			for(i = 0; i <= ((opcode & 0x0F00) >> 8); i++) {
+			for(i = 0; i <= ((opcode & 0x0F00u) >> 8); i++) {
 				c->registers[i] = c->memory[c->address_register + i];
 			}
 			c->pc += BYTES_PER_INSTRUCTION;
@@ -333,8 +333,7 @@ void handle_unknown_opcode(uint16_t opcode)
 
 void clear_screen(struct chip8 *c) 
 {
-	int i;
-	for(i = 0; i < SCREEN_SIZE; i++) {
+	for(uint32_t i = 0; i < SCREEN_SIZE; i++) {
 		c->screen[i] = false;
 	}
 }
@@ -356,12 +355,12 @@ void call_subroutine(struct chip8 *c, uint16_t address)
 	jump(c, address);
 }
 
-void draw_sprite(struct chip8 *c, int screen_x, int screen_y, int rows)
+void draw_sprite(struct chip8 *c, uint32_t screen_x, uint32_t screen_y, uint32_t rows)
 {
 	c->registers[0xF] = 0;
-	for(int y = 0; y < rows; y++) {
-		for(int x = 0; x < 8; x++) {
-			int screen_index = ((screen_y + y) * 64) + ((screen_x + x) % 64);
+	for(uint32_t y = 0; y < rows; y++) {
+		for(uint32_t x = 0; x < 8; x++) {
+			uint32_t screen_index = ((screen_y + y) * 64) + ((screen_x + x) % 64);
 			bool pixel_original_value = c->screen[screen_index];
 			c->screen[screen_index] ^= ((c->memory[c->address_register + y] >> (7 - x)) & 0x1);
 			if(pixel_original_value == true && c->screen[screen_index] == false) {

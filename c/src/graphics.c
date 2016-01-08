@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "graphics.h"
@@ -33,7 +34,7 @@ void refresh_window()
 	SDL_UpdateWindowSurface(window);
 }
 
-void draw_rectangle(int x, int y, int width, int height)
+void draw_rectangle(int32_t x, int32_t y, int32_t width, int32_t height)
 {
 	SDL_Surface * screenSurface = SDL_GetWindowSurface(window);
 	SDL_Rect srcrect;
@@ -53,10 +54,10 @@ void close_window()
 
 void update_window(bool *screen) 
 {
-	for(int i = 0; i < SCREEN_SIZE; i++) {
+	for(int32_t i = 0; i < SCREEN_SIZE; i++) {
 		if(screen[i]) {
-			int x = (i % SCREEN_WIDTH) * SCALE;
-			int y = (i / SCREEN_WIDTH) * SCALE;
+			int32_t x = (i % SCREEN_WIDTH) * SCALE;
+			int32_t y = (i / SCREEN_WIDTH) * SCALE;
 			draw_rectangle(x, y, SCALE, SCALE);
 		}
 	}

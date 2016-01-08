@@ -1,5 +1,4 @@
-#ifndef CHIP8_H
-#define CHIP8_H
+#pragma once
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -34,7 +33,5 @@ void clear_screen(struct chip8 *c);
 void return_from_subroutine(struct chip8 *c);
 void jump(struct chip8 *c, uint16_t address);
 void call_subroutine(struct chip8 *c, uint16_t address);
-void draw_sprite(struct chip8 *c, int screen_x, int screen_y, int rows);
+void draw_sprite(struct chip8 *c, uint32_t screen_x, uint32_t screen_y, uint32_t rows);
 void load_program(struct chip8 *c, char *path);
-
-#endif

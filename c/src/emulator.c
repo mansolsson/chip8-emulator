@@ -1,5 +1,7 @@
 #include <time.h>
 #include <math.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "emulator.h"
 #include "chip8.h"
@@ -18,10 +20,10 @@ void start_program(char *program_path)
 	load_program(&c, program_path);
 
 	create_window();
-	long cd = 0;
+	int64_t cd = 0;
 
 	while(game_running) {
-		long before = get_current_time_ms();
+		int64_t before = get_current_time_ms();
 		handle_input(&c, &game_running);
 
 		uint16_t opcode = c.memory[c.pc];
@@ -32,8 +34,8 @@ void start_program(char *program_path)
 		update_window(c.screen);
 		refresh_window();
 
-		long elapsed_time = get_current_time_ms() - before;
-		long time_to_sleep = MS_PER_INSTRUCTION - elapsed_time;
+		int64_t elapsed_time = get_current_time_ms() - before;
+		int64_t time_to_sleep = MS_PER_INSTRUCTION - elapsed_time;
 		cd += elapsed_time;
 		if(cd >= MS_PER_COUNTDOWN) {
 			if(c.delay_timer > 0) {
@@ -52,7 +54,7 @@ void start_program(char *program_path)
 	close_window();
 }
 
-long get_current_time_ms()
+int64_t get_current_time_ms()
 {
     struct timespec spec;
     clock_gettime(CLOCK_REALTIME, &spec);
