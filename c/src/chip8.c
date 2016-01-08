@@ -124,10 +124,9 @@ void init_memory(struct chip8 *c)
 
 void execute_opcode(struct chip8 *c, uint16_t opcode)
 {
-	int i, x, y;
+	int i;
 	uint8_t org_value;
-	int start_x, start_y, index;
-	bool org_val, key_pressed;
+	bool key_pressed;
 
 	switch(opcode & 0xF000) {
 	case 0x0000:

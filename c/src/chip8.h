@@ -15,7 +15,7 @@
 struct chip8 {
 	bool screen[SCREEN_SIZE];
 	uint16_t stack[STACK_SIZE];
-	char stack_index;
+	uint8_t stack_index;
 	uint16_t pc;
 
 	uint8_t memory[MEMORY_SIZE];

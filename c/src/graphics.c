@@ -9,7 +9,6 @@ static SDL_Window *window;
 
 void create_window()
 {
-    SDL_Surface *screenSurface = NULL; 
     if(SDL_Init(SDL_INIT_VIDEO) < 0) { 
         fprintf(stderr, "Failed to initialize SDL: %s\n", SDL_GetError());
         exit(1);
@@ -31,7 +30,6 @@ void clear_window()
 
 void refresh_window()
 {
-	SDL_Surface * screenSurface = SDL_GetWindowSurface(window); 
 	SDL_UpdateWindowSurface(window);
 }
 
