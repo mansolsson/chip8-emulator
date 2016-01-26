@@ -6,6 +6,7 @@
 #include "emulator.h"
 #include "chip8.h"
 #include "graphics.h"
+#include "cpu.h"
 
 #define OPCODES_PER_SECOND 600
 #define TIMER_COUNTDOWN_PER_SECOND 60
