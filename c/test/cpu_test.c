@@ -820,7 +820,7 @@ Suite * opcode_suite()
     Suite *suite;
     TCase *tc_core;
 
-    suite = suite_create("Opcode");
+    suite = suite_create("CPU");
     tc_core = tcase_create("Core");
 
     tcase_add_test(tc_core, opcode_00E0_clears_screen);
@@ -875,19 +875,4 @@ Suite * opcode_suite()
     suite_add_tcase(suite, tc_core);
 
     return suite;
-}
-
-int main()
-{
-    int number_failed;
-    Suite *s;
-    SRunner *sr;
-
-    s = opcode_suite();
-    sr = srunner_create(s);
-
-    srunner_run_all(sr, CK_NORMAL);
-    number_failed = srunner_ntests_failed(sr);
-    srunner_free(sr);
-    return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
