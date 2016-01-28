@@ -21,7 +21,7 @@ void start_program(char *program_path)
 	load_program(&c, program_path);
 
 	create_window();
-	int64_t cd = 0;
+	int64_t time_since_last_countdown = 0;
 
 	while(game_running) {
 		int64_t before = get_current_time_ms();
@@ -37,18 +37,19 @@ void start_program(char *program_path)
 
 		int64_t elapsed_time = get_current_time_ms() - before;
 		int64_t time_to_sleep = MS_PER_INSTRUCTION - elapsed_time;
-		cd += elapsed_time;
-		if(cd >= MS_PER_COUNTDOWN) {
+		time_since_last_countdown += elapsed_time;
+		if(time_since_last_countdown >= MS_PER_COUNTDOWN) {
 			if(c.delay_timer > 0) {
 				c.delay_timer--;	
 			}
 			if(c.sound_timer > 0) {
 				c.sound_timer--;
 			}	
-			cd = 0;
+			time_since_last_countdown = 0;
 		}
 
 		if(time_to_sleep > 0) {
+			time_since_last_countdown += time_to_sleep;
 			SDL_Delay(time_to_sleep);
 		}
 	}
