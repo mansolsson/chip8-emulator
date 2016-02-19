@@ -1,17 +1,19 @@
 apply plugin: 'java'
 apply plugin: 'application'
-apply plugin: 'idea'
+apply plugin: 'eclipse'
 
-mainClassName = "mansolsson.emulator.chip8.Application"
+mainClassName = "mansolsson.chip8.Emulator"
 
 version = '1.0'
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '1.+'
+    testCompile 'junit:junit:4.12'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.11'
 }

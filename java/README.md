@@ -1,11 +1,3 @@
-# CHIP-8 emulator
+Run **./gradlew run** to compile and run the emulator.
 
-## Building and running emulator
-### Building
-gradle build
-### Running
-gradle run
-
-## TODO
-* Add sound
-* Replace Swing with JavaFX
+The numpad is used for input while running the program.
