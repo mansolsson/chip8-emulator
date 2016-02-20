@@ -2,9 +2,15 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'eclipse'
 
-mainClassName = "mansolsson.chip8.Emulator"
-
 version = '1.0'
+
+mainClassName = 'mansolsson.chip8.Emulator'
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'mansolsson.chip8.Emulator'
+	}
+}
 
 repositories {
     mavenCentral()
