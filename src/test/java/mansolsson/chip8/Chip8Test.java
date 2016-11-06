@@ -398,7 +398,7 @@ public class Chip8Test {
 		assertEquals(0, chip8.getV()[0xF]);
 		assertEquals(514, chip8.getPc());
 	}
-	
+
 	@Test
 	public void opcodeDXYNDrawSpriteAtIToScreenAtXYWrapsAroundScreenY() {
 		chip8.setI(4);
@@ -458,7 +458,7 @@ public class Chip8Test {
 	public void opcodeEXA1DoNotSkipInstructionWhenKeyInVXIsPressed() {
 		chip8.getV()[3] = 6;
 		// Key with index 6 pressed
-		chip8.getKeyboard().pressKey(KeyCode.NUMPAD6); 
+		chip8.getKeyboard().pressKey(KeyCode.NUMPAD6);
 		putOpcodeInMemory(0xE3A1);
 		chip8.runNextInstruction();
 		assertEquals(514, chip8.getPc());
@@ -825,77 +825,77 @@ public class Chip8Test {
 			putOpcodeInMemory(0x0011);
 			chip8.runNextInstruction();
 			fail();
-		} catch (UnknownOpcodeException e) {
+		} catch (final UnknownOpcodeException e) {
 			assertEquals("Unknown opcode 0x11", e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void unknownOpcodeInGroup5GeneratesError() {
 		try {
 			putOpcodeInMemory(0x5A23);
 			chip8.runNextInstruction();
 			fail();
-		} catch (UnknownOpcodeException e) {
+		} catch (final UnknownOpcodeException e) {
 			assertEquals("Unknown opcode 0x5a23", e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void unknownOpcodeInGroup8GeneratesError() {
 		try {
 			putOpcodeInMemory(0x8A29);
 			chip8.runNextInstruction();
 			fail();
-		} catch (UnknownOpcodeException e) {
+		} catch (final UnknownOpcodeException e) {
 			assertEquals("Unknown opcode 0x8a29", e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void unknownOpcodeInGroup9GeneratesError() {
 		try {
 			putOpcodeInMemory(0x9A21);
 			chip8.runNextInstruction();
 			fail();
-		} catch (UnknownOpcodeException e) {
+		} catch (final UnknownOpcodeException e) {
 			assertEquals("Unknown opcode 0x9a21", e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void unknownOpcodeInGroupEGeneratesError() {
 		try {
 			putOpcodeInMemory(0xEA21);
 			chip8.runNextInstruction();
 			fail();
-		} catch (UnknownOpcodeException e) {
+		} catch (final UnknownOpcodeException e) {
 			assertEquals("Unknown opcode 0xea21", e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void unknownOpcodeInGroupFGeneratesError() {
 		try {
 			putOpcodeInMemory(0xFA21);
 			chip8.runNextInstruction();
 			fail();
-		} catch (UnknownOpcodeException e) {
+		} catch (final UnknownOpcodeException e) {
 			assertEquals("Unknown opcode 0xfa21", e.getMessage());
 		}
 	}
 
 	@Test
 	public void loadProgramIntoMemory() {
-		int startOfProgram = 512; 
-		byte[] program = new byte[] { 50, 60, 12, 1, 8, 6, 4, 5, -120 };
+		final int startOfProgram = 512;
+		final byte[] program = new byte[] { 50, 60, 12, 1, 8, 6, 4, 5, -120 };
 		chip8.loadProgram(program);
 		for (int i = startOfProgram; i < startOfProgram + program.length; i++) {
 			assertEquals(program[i - startOfProgram] & 0xFF, chip8.getMemory()[i]);
 		}
 	}
-	
-	public void putOpcodeInMemory(int opcode) {
+
+	public void putOpcodeInMemory(final int opcode) {
 		chip8.getMemory()[chip8.getPc()] = (opcode >> 8) & 0xFF;
 		chip8.getMemory()[chip8.getPc() + 1] = opcode & 0xFF;
 	}

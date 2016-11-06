@@ -1,9 +1,9 @@
 package mansolsson.chip8;
 
 public class Opcode {
-	private int opcode;
+	private final int opcode;
 
-	public Opcode(int opcode) {
+	public Opcode(final int opcode) {
 		this.opcode = opcode;
 	}
 

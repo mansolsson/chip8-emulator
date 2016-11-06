@@ -4,18 +4,18 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 
 public class ScreenPainter extends AnimationTimer {
-	private Chip8 chip8;
-	private GraphicsContext graphicsContext;
+	private final Chip8 chip8;
+	private final GraphicsContext graphicsContext;
 
-	public ScreenPainter(Chip8 chip8, GraphicsContext graphicsContext) {
+	public ScreenPainter(final Chip8 chip8, final GraphicsContext graphicsContext) {
 		this.chip8 = chip8;
 		this.graphicsContext = graphicsContext;
 	}
 
 	@Override
-	public void handle(long currentNanoTime) {
+	public void handle(final long currentNanoTime) {
 		graphicsContext.clearRect(0, 0, Screen.WIDTH * Screen.SCALE, Screen.HEIGHT * Screen.SCALE);
-		boolean[][] screen = chip8.getScreen().getPixels();
+		final boolean[][] screen = chip8.getScreen().getPixels();
 		for (int x = 0; x < screen.length; x++) {
 			for (int y = 0; y < screen[x].length; y++) {
 				if (screen[x][y]) {

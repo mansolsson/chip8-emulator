@@ -5,9 +5,9 @@ public class Screen {
 	public static final int WIDTH = 64;
 	public static final int SCALE = 10;
 
-	private boolean[][] pixels = new boolean[WIDTH][HEIGHT];
+	private final boolean[][] pixels = new boolean[WIDTH][HEIGHT];
 
-	public synchronized boolean getPixel(int x, int y) {
+	public synchronized boolean getPixel(final int x, final int y) {
 		return pixels[x][y];
 	}
 
@@ -19,18 +19,18 @@ public class Screen {
 		}
 	}
 
-	public synchronized void setPixel(int x, int y, boolean pixel) {
+	public synchronized void setPixel(final int x, final int y, final boolean pixel) {
 		pixels[x][y] = pixel;
 	}
 
-	public synchronized boolean drawSprite(int x, int y, int[] rows) {
+	public synchronized boolean drawSprite(final int x, final int y, final int[] rows) {
 		boolean pixelTurnedOff = false;
 		for (int column = 0; column < 8; column++) {
 			for (int row = 0; row < rows.length; row++) {
-				int currentY = (y + row) % HEIGHT;
-				int currentX = (x + column) % WIDTH;
-				boolean screenValue = pixels[currentX][currentY];
-				boolean spriteValue = ((rows[row] >> (7 - column)) & 1) == 1;
+				final int currentY = (y + row) % HEIGHT;
+				final int currentX = (x + column) % WIDTH;
+				final boolean screenValue = pixels[currentX][currentY];
+				final boolean spriteValue = ((rows[row] >> (7 - column)) & 1) == 1;
 				pixels[currentX][currentY] = spriteValue ^ screenValue;
 				if (screenValue && spriteValue) {
 					pixelTurnedOff = true;

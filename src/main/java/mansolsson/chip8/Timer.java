@@ -9,7 +9,7 @@ public class Timer {
 		}
 	}
 
-	public synchronized void setTime(int time) {
+	public synchronized void setTime(final int time) {
 		this.time = time;
 	}
 

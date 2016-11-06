@@ -44,7 +44,7 @@ public class Keyboard {
 		KEY_MAPPING.put(KeyCode.ADD, 15);
 	}
 
-	private AtomicBoolean[] keys = new AtomicBoolean[16];
+	private final AtomicBoolean[] keys = new AtomicBoolean[16];
 
 	public Keyboard() {
 		for (int i = 0; i < keys.length; i++) {
@@ -52,22 +52,22 @@ public class Keyboard {
 		}
 	}
 
-	public void pressKey(KeyCode keyCode) {
+	public void pressKey(final KeyCode keyCode) {
 		if (KEY_MAPPING.containsKey(keyCode)) {
 			keys[KEY_MAPPING.get(keyCode)].set(true);
 		}
 	}
 
-	public void releaseKey(KeyCode keyCode) {
+	public void releaseKey(final KeyCode keyCode) {
 		if (KEY_MAPPING.containsKey(keyCode)) {
 			keys[KEY_MAPPING.get(keyCode)].set(false);
 		}
 	}
 
-	public boolean isKeyPressed(int index) {
+	public boolean isKeyPressed(final int index) {
 		return keys[index].get();
 	}
-	
+
 	public int numberOfKeys() {
 		return keys.length;
 	}

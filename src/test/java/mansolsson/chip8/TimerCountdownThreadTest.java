@@ -1,21 +1,20 @@
 package mansolsson.chip8;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Rule;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.Test;
-import org.junit.rules.Timeout;
 
 public class TimerCountdownThreadTest {
-	@Rule
-	public Timeout testTimeout = Timeout.seconds(2);
-
 	@Test
 	public void threadShouldTerminateWhenshutdownThreadIsCalled() throws InterruptedException {
-		TimerCountdownThread thread = new TimerCountdownThread(new Chip8());
+		final TimerCountdownThread thread = new TimerCountdownThread(new Chip8());
 		thread.start();
-		thread.shutdownThread();
-		thread.join();
-		assertEquals(Thread.State.TERMINATED, thread.getState());
+
+		thread.shutdown();
+
+		await().atMost(1, TimeUnit.SECONDS).until(() -> assertEquals(Thread.State.TERMINATED, thread.getState()));
 	}
 }

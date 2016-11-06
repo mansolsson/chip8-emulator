@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:4.12'
+    testCompile 'org.awaitility:awaitility:2.0.0'
 }
 
 task wrapper(type: Wrapper) {

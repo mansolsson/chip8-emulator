@@ -1,21 +1,23 @@
 package mansolsson.chip8;
 
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.Stack;
 
 public class Chip8 {
 	private static final int BYTES_PER_INSTRUCTION = 2;
 	private static final int START_OF_PROGRAM = 512;
 
-	private Screen screen = new Screen();
-	private Stack<Integer> stack = new Stack<Integer>();
+	private final Screen screen = new Screen();
+	private final Stack<Integer> stack = new Stack<Integer>();
 	private int pc;
-	private int[] v = new int[16];
+	private final int[] v = new int[16];
 	private int I;
-	private int[] memory = new int[4096];
-	private Keyboard keyboard = new Keyboard();
-	private Timer delayTimer = new Timer();
-	private Timer soundTimer = new Timer();
+	private final int[] memory = new int[4096];
+	private final Keyboard keyboard = new Keyboard();
+	private final Timer delayTimer = new Timer();
+	private final Timer soundTimer = new Timer();
+
+	private final SecureRandom secureRandom = new SecureRandom();
 
 	public Chip8() {
 		init();
@@ -37,18 +39,18 @@ public class Chip8 {
 		soundTimer.setTime(0);
 	}
 
-	public void loadProgram(byte[] program) {
+	public void loadProgram(final byte[] program) {
 		for (int i = 0; i < program.length; i++) {
 			memory[START_OF_PROGRAM + i] = program[i] & 0xFF;
 		}
 	}
 
 	public void runNextInstruction() {
-		int opcode = (memory[pc] << 8) | memory[pc + 1];
+		final int opcode = (memory[pc] << 8) | memory[pc + 1];
 		runOpcode(new Opcode(opcode));
 	}
 
-	private void runOpcode(Opcode opcode) {
+	private void runOpcode(final Opcode opcode) {
 		if (opcode.getBit12To16() == 0) {
 			runCommandGroup0(opcode);
 		} else if (opcode.getBit12To16() == 1) {
@@ -84,7 +86,7 @@ public class Chip8 {
 		}
 	}
 
-	private void runCommandGroup0(Opcode opcode) {
+	private void runCommandGroup0(final Opcode opcode) {
 		if (opcode.getFirst8Bits() == 0xE0) {
 			screen.clear();
 			moveToNextInstruction();
@@ -95,31 +97,31 @@ public class Chip8 {
 		}
 	}
 
-	private void runCommandGroup1(Opcode opcode) {
+	private void runCommandGroup1(final Opcode opcode) {
 		pc = opcode.getFirst12Bits();
 	}
 
-	private void runCommandGroup2(Opcode opcode) {
+	private void runCommandGroup2(final Opcode opcode) {
 		moveToNextInstruction();
 		stack.push(pc);
 		pc = opcode.getFirst12Bits();
 	}
 
-	private void runCommandGroup3(Opcode opcode) {
+	private void runCommandGroup3(final Opcode opcode) {
 		if (v[opcode.getBit8To12()] == opcode.getFirst8Bits()) {
 			moveToNextInstruction();
 		}
 		moveToNextInstruction();
 	}
 
-	private void runCommandGroup4(Opcode opcode) {
+	private void runCommandGroup4(final Opcode opcode) {
 		if (v[opcode.getBit8To12()] != opcode.getFirst8Bits()) {
 			moveToNextInstruction();
 		}
 		moveToNextInstruction();
 	}
 
-	private void runCommandGroup5(Opcode opcode) {
+	private void runCommandGroup5(final Opcode opcode) {
 		if (opcode.getFirst4Bits() == 0) {
 			if (v[opcode.getBit8To12()] == v[opcode.getBit4To8()]) {
 				moveToNextInstruction();
@@ -130,18 +132,18 @@ public class Chip8 {
 		}
 	}
 
-	private void runCommandGroup6(Opcode opcode) {
+	private void runCommandGroup6(final Opcode opcode) {
 		v[opcode.getBit8To12()] = opcode.getFirst8Bits();
 		moveToNextInstruction();
 	}
 
-	private void runCommandGroup7(Opcode opcode) {
+	private void runCommandGroup7(final Opcode opcode) {
 		v[opcode.getBit8To12()] += opcode.getFirst8Bits();
 		v[opcode.getBit8To12()] &= 0xFF;
 		moveToNextInstruction();
 	}
 
-	private void runCommandGroup8(Opcode opcode) {
+	private void runCommandGroup8(final Opcode opcode) {
 		if (opcode.getFirst4Bits() == 0) {
 			v[opcode.getBit8To12()] = v[opcode.getBit4To8()];
 			moveToNextInstruction();
@@ -183,7 +185,7 @@ public class Chip8 {
 		}
 	}
 
-	private void runCommandGroup9(Opcode opcode) {
+	private void runCommandGroup9(final Opcode opcode) {
 		if (opcode.getFirst4Bits() == 0) {
 			if (v[opcode.getBit8To12()] != v[opcode.getBit4To8()]) {
 				moveToNextInstruction();
@@ -194,28 +196,28 @@ public class Chip8 {
 		}
 	}
 
-	private void runCommandGroupA(Opcode opcode) {
+	private void runCommandGroupA(final Opcode opcode) {
 		I = opcode.getFirst12Bits();
 		moveToNextInstruction();
 	}
 
-	private void runCommandGroupB(Opcode opcode) {
+	private void runCommandGroupB(final Opcode opcode) {
 		pc = opcode.getFirst12Bits() + v[0];
 	}
 
-	private void runCommandGroupC(Opcode opcode) {
-		v[opcode.getBit8To12()] = opcode.getFirst8Bits() & new Random().nextInt();
+	private void runCommandGroupC(final Opcode opcode) {
+		v[opcode.getBit8To12()] = opcode.getFirst8Bits() & secureRandom.nextInt();
 		moveToNextInstruction();
 	}
 
-	private void runCommandGroupD(Opcode opcode) {
-		int[] rows = new int[opcode.getFirst4Bits()];
+	private void runCommandGroupD(final Opcode opcode) {
+		final int[] rows = new int[opcode.getFirst4Bits()];
 		System.arraycopy(memory, I, rows, 0, rows.length);
 		v[0xF] = screen.drawSprite(v[opcode.getBit8To12()], v[opcode.getBit4To8()], rows) ? 1 : 0;
 		moveToNextInstruction();
 	}
 
-	private void runCommandGroupE(Opcode opcode) {
+	private void runCommandGroupE(final Opcode opcode) {
 		if (opcode.getFirst8Bits() == 0x9E) {
 			if (keyboard.isKeyPressed(v[opcode.getBit8To12()])) {
 				moveToNextInstruction();
@@ -231,7 +233,7 @@ public class Chip8 {
 		}
 	}
 
-	private void runCommandGroupF(Opcode opcode) {
+	private void runCommandGroupF(final Opcode opcode) {
 		if (opcode.getFirst8Bits() == 7) {
 			v[opcode.getBit8To12()] = delayTimer.getTime();
 			moveToNextInstruction();
@@ -415,7 +417,7 @@ public class Chip8 {
 		return I;
 	}
 
-	public void setI(int I) {
+	public void setI(final int I) {
 		this.I = I;
 	}
 }

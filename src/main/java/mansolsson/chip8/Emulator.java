@@ -21,18 +21,18 @@ public class Emulator extends Application {
 	private OpcodeRunnerThread opcodeRunnerThread;
 	private TimerCountdownThread timerCountdownThread;
 	private ScreenPainter chip8AnimationTimer;
-	private Chip8 chip8 = new Chip8();
+	private final Chip8 chip8 = new Chip8();
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		launch(args);
 	}
 
 	@Override
-	public void start(Stage stage) throws IOException {
-		Canvas canvas = new Canvas(Screen.WIDTH * Screen.SCALE, Screen.HEIGHT * Screen.SCALE);
-		GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+	public void start(final Stage stage) throws IOException {
+		final Canvas canvas = new Canvas(Screen.WIDTH * Screen.SCALE, Screen.HEIGHT * Screen.SCALE);
+		final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
 
-		VBox vbox = new VBox();
+		final VBox vbox = new VBox();
 		vbox.getChildren().addAll(createMenuBar(stage, graphicsContext), canvas);
 
 		stage.setTitle("Chip-8 Emulator");
@@ -40,8 +40,8 @@ public class Emulator extends Application {
 		stage.show();
 	}
 
-	private Scene createScene(VBox vbox) {
-		Scene scene = new Scene(vbox);
+	private Scene createScene(final VBox vbox) {
+		final Scene scene = new Scene(vbox);
 		scene.setOnKeyPressed(keyEvent -> {
 			chip8.getKeyboard().pressKey(keyEvent.getCode());
 		});
@@ -51,26 +51,26 @@ public class Emulator extends Application {
 		return scene;
 	}
 
-	private MenuBar createMenuBar(Stage stage, GraphicsContext graphicsContext) {
-		MenuItem menuItem = new MenuItem("Load Chip-8 Program");
+	private MenuBar createMenuBar(final Stage stage, final GraphicsContext graphicsContext) {
+		final MenuItem menuItem = new MenuItem("Load Chip-8 Program");
 		menuItem.setOnAction(actionEvent -> {
-			File file = chooseFile(stage);
+			final File file = chooseFile(stage);
 			if (file != null) {
 				stopCurrentProgram();
 				startNewProgram(graphicsContext, file);
 			}
 		});
 
-		Menu menu = new Menu("File");
+		final Menu menu = new Menu("File");
 		menu.getItems().addAll(menuItem);
 
-		MenuBar menuBar = new MenuBar();
+		final MenuBar menuBar = new MenuBar();
 		menuBar.getMenus().addAll(menu);
 		return menuBar;
 	}
 
-	private File chooseFile(Stage stage) {
-		FileChooser fileChooser = new FileChooser();
+	private File chooseFile(final Stage stage) {
+		final FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Chip-8 File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Chip-8 Files", "*.ch8"),
 				new ExtensionFilter("All Files", "*.*"));
@@ -82,14 +82,14 @@ public class Emulator extends Application {
 			opcodeRunnerThread.shutdownThread();
 		}
 		if (timerCountdownThread != null) {
-			timerCountdownThread.shutdownThread();
+			timerCountdownThread.shutdown();
 		}
 	}
 
-	private void startNewProgram(GraphicsContext graphicsContext, File file) {
+	private void startNewProgram(final GraphicsContext graphicsContext, final File file) {
 		try {
 			chip8.init();
-			byte[] programContent = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
+			final byte[] programContent = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
 			chip8.loadProgram(programContent);
 			opcodeRunnerThread = new OpcodeRunnerThread(chip8);
 			timerCountdownThread = new TimerCountdownThread(chip8);
@@ -99,7 +99,7 @@ public class Emulator extends Application {
 			chip8AnimationTimer.start();
 			opcodeRunnerThread.start();
 			timerCountdownThread.start();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			System.err.println("Failed to read file " + e.getMessage());
 		}
 	}
